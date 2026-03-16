@@ -129,6 +129,3 @@ export default function AdminPosts() {
     </div>
   );
 }
-
-// Need FileText import for empty state
-import { FileText as _ft } from 'lucide-react';
