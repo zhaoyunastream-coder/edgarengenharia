@@ -1,10 +1,6 @@
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import Link from '@tiptap/extension-link';
-import { useEffect, useCallback, useState } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import {
-  Bold, Italic, Underline as UnderlineIcon, Heading1, Heading2, Heading3,
+  Bold, Italic, Underline, Heading1, Heading2, Heading3,
   List, ListOrdered, Quote, Link as LinkIcon, Undo, Redo,
 } from 'lucide-react';
 
@@ -19,7 +15,7 @@ function ToolbarButton({ active, onClick, children, title }: {
   return (
     <button
       type="button"
-      onClick={onClick}
+      onMouseDown={(e) => { e.preventDefault(); onClick(); }}
       title={title}
       className={`p-1.5 rounded transition-colors ${
         active
@@ -33,47 +29,40 @@ function ToolbarButton({ active, onClick, children, title }: {
 }
 
 export default function RichTextEditor({ content, onChange }: RichTextEditorProps) {
-  const [linkUrl, setLinkUrl] = useState('');
-  const [showLinkInput, setShowLinkInput] = useState(false);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const isInitialized = useRef(false);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: { levels: [1, 2, 3] },
-      }),
-      Underline,
-      Link.configure({ openOnClick: false, HTMLAttributes: { class: 'text-amber-400 underline' } }),
-    ],
-    content,
-    editorProps: {
-      attributes: {
-        class: 'prose prose-invert prose-sm max-w-none min-h-[400px] px-4 py-3 focus:outline-none',
-      },
-    },
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-  });
-
-  // Sync external content changes (e.g. loading existing post)
   useEffect(() => {
-    if (editor && content && editor.getHTML() !== content) {
-      editor.commands.setContent(content);
+    if (editorRef.current && !isInitialized.current) {
+      editorRef.current.innerHTML = content || '';
+      isInitialized.current = true;
     }
-  }, [content, editor]);
+  }, [content]);
 
-  const setLink = useCallback(() => {
-    if (!editor) return;
-    if (linkUrl) {
-      editor.chain().focus().extendMarkRange('link').setLink({ href: linkUrl }).run();
-    } else {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+  // When content changes externally (e.g. loading a post for editing)
+  useEffect(() => {
+    if (editorRef.current && isInitialized.current && content && editorRef.current.innerHTML !== content) {
+      editorRef.current.innerHTML = content;
     }
-    setShowLinkInput(false);
-    setLinkUrl('');
-  }, [editor, linkUrl]);
+  }, [content]);
 
-  if (!editor) return null;
+  const exec = useCallback((command: string, value?: string) => {
+    document.execCommand(command, false, value);
+    if (editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
+  }, [onChange]);
+
+  const handleInput = useCallback(() => {
+    if (editorRef.current) {
+      onChange(editorRef.current.innerHTML);
+    }
+  }, [onChange]);
+
+  const insertLink = useCallback(() => {
+    const url = prompt('URL do link:');
+    if (url) exec('createLink', url);
+  }, [exec]);
 
   const s = 16;
 
@@ -81,73 +70,64 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
     <div className="border border-border rounded-lg overflow-hidden focus-within:border-amber-500 transition-colors bg-[#0A0C0F]">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 border-b border-border bg-card">
-        <ToolbarButton active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()} title="Negrito">
+        <ToolbarButton onClick={() => exec('bold')} title="Negrito">
           <Bold size={s} />
         </ToolbarButton>
-        <ToolbarButton active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()} title="Itálico">
+        <ToolbarButton onClick={() => exec('italic')} title="Itálico">
           <Italic size={s} />
         </ToolbarButton>
-        <ToolbarButton active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()} title="Sublinhado">
-          <UnderlineIcon size={s} />
+        <ToolbarButton onClick={() => exec('underline')} title="Sublinhado">
+          <Underline size={s} />
         </ToolbarButton>
 
         <div className="w-px h-5 bg-border mx-1" />
 
-        <ToolbarButton active={editor.isActive('heading', { level: 1 })} onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} title="Título 1">
+        <ToolbarButton onClick={() => exec('formatBlock', 'h1')} title="Título 1">
           <Heading1 size={s} />
         </ToolbarButton>
-        <ToolbarButton active={editor.isActive('heading', { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} title="Título 2">
+        <ToolbarButton onClick={() => exec('formatBlock', 'h2')} title="Título 2">
           <Heading2 size={s} />
         </ToolbarButton>
-        <ToolbarButton active={editor.isActive('heading', { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} title="Título 3">
+        <ToolbarButton onClick={() => exec('formatBlock', 'h3')} title="Título 3">
           <Heading3 size={s} />
         </ToolbarButton>
 
         <div className="w-px h-5 bg-border mx-1" />
 
-        <ToolbarButton active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()} title="Lista">
+        <ToolbarButton onClick={() => exec('insertUnorderedList')} title="Lista">
           <List size={s} />
         </ToolbarButton>
-        <ToolbarButton active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()} title="Lista numerada">
+        <ToolbarButton onClick={() => exec('insertOrderedList')} title="Lista numerada">
           <ListOrdered size={s} />
         </ToolbarButton>
-        <ToolbarButton active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()} title="Citação">
+        <ToolbarButton onClick={() => exec('formatBlock', 'blockquote')} title="Citação">
           <Quote size={s} />
         </ToolbarButton>
 
         <div className="w-px h-5 bg-border mx-1" />
 
-        <ToolbarButton active={editor.isActive('link')} onClick={() => { setShowLinkInput(!showLinkInput); setLinkUrl(editor.getAttributes('link').href || ''); }} title="Link">
+        <ToolbarButton onClick={insertLink} title="Link">
           <LinkIcon size={s} />
         </ToolbarButton>
 
         <div className="w-px h-5 bg-border mx-1" />
 
-        <ToolbarButton onClick={() => editor.chain().focus().undo().run()} title="Desfazer">
+        <ToolbarButton onClick={() => exec('undo')} title="Desfazer">
           <Undo size={s} />
         </ToolbarButton>
-        <ToolbarButton onClick={() => editor.chain().focus().redo().run()} title="Refazer">
+        <ToolbarButton onClick={() => exec('redo')} title="Refazer">
           <Redo size={s} />
         </ToolbarButton>
-
-        {showLinkInput && (
-          <div className="flex items-center gap-2 ml-2">
-            <input
-              type="url"
-              value={linkUrl}
-              onChange={(e) => setLinkUrl(e.target.value)}
-              placeholder="https://..."
-              className="bg-background border border-border rounded px-2 py-1 text-xs text-foreground w-48 focus:outline-none focus:border-amber-500"
-              onKeyDown={(e) => e.key === 'Enter' && setLink()}
-            />
-            <button type="button" onClick={setLink} className="text-xs text-amber-400 hover:text-amber-300">OK</button>
-            <button type="button" onClick={() => setShowLinkInput(false)} className="text-xs text-muted-foreground hover:text-foreground">✕</button>
-          </div>
-        )}
       </div>
 
-      {/* Editor */}
-      <EditorContent editor={editor} />
+      {/* Editable area */}
+      <div
+        ref={editorRef}
+        contentEditable
+        onInput={handleInput}
+        className="min-h-[400px] px-4 py-3 text-foreground text-sm focus:outline-none prose prose-invert prose-sm max-w-none"
+        style={{ minHeight: 400 }}
+      />
     </div>
   );
 }
