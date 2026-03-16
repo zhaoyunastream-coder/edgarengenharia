@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import logo from '@/assets/logo-transparent.png';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
