@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { BadgeCheck } from 'lucide-react';
+import logo from '@/assets/logo-transparent.png';
 
 const serviceLinks = [
   'Projetos e Execução', 'Compatibilização BIM', 'Regularização de Imóveis',
