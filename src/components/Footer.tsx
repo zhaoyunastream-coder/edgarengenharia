@@ -21,8 +21,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-1 mb-4">
-              <span className="font-heading text-3xl text-primary">EDGAR</span>
-              <span className="font-heading text-3xl text-foreground">Engenharia</span>
+              <img src={logo} alt="Edgar Engenharia" className="h-14 invert brightness-200" />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Soluções completas em Engenharia Civil em Carazinho/RS e região.
