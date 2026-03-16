@@ -12,7 +12,7 @@ const education = [
   { year: '2022', title: 'Pós em Estruturas de Concreto Armado' },
 ];
 
-const softwares = ['AutoCAD', 'SketchUp', 'Revit', 'MS Project', 'Navisworks', 'Eberick'];
+
 
 export default function AboutSection() {
   const { ref, controls, variants } = useScrollReveal();
@@ -72,21 +72,6 @@ export default function AboutSection() {
                 </div>
               </div>
 
-              {/* Softwares */}
-              <div className="mb-8">
-                <h3 className="font-heading text-2xl mb-4">Softwares</h3>
-                <div className="flex flex-wrap gap-2">
-                  {softwares.map((sw) => (
-                    <span key={sw} className="bg-card border border-border px-3 py-1.5 rounded-md text-sm text-foreground">
-                      {sw}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <button className="border border-primary text-primary px-6 py-3 rounded-md font-semibold hover:bg-primary hover:text-primary-foreground transition-all">
-                Baixar Currículo
-              </button>
             </div>
           </div>
         </motion.div>
