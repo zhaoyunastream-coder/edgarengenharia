@@ -32,7 +32,7 @@ export default function ContactCTASection() {
               <Mail className="w-5 h-5" /> E-mail
             </a>
             <a
-              href="tel:+5554999999999"
+              href="tel:+5554997014995"
               className="border border-border text-foreground px-6 py-3 rounded-md font-semibold flex items-center justify-center gap-2 hover:border-primary hover:text-primary transition-all"
             >
               <Phone className="w-5 h-5" /> Telefone
