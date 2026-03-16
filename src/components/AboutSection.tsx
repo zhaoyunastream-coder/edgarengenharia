@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 import { GraduationCap, Calendar } from 'lucide-react';
+import edgarPhoto from '@/assets/edgar-photo.png';
 
 const education = [
   { year: '2004', title: 'Ciências Contábeis — UPF' },
