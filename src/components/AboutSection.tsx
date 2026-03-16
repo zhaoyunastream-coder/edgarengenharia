@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
 import { GraduationCap, Calendar } from 'lucide-react';
+import edgarPhoto from '@/assets/edgar-photo.png';
 
 const education = [
   { year: '2004', title: 'Ciências Contábeis — UPF' },
@@ -25,12 +26,8 @@ export default function AboutSection() {
             {/* Image Side */}
             <div className="relative">
               <div className="aspect-[4/5] bg-card rounded-lg border border-border overflow-hidden relative">
+                <img src={edgarPhoto} alt="Edgar Alexandre Kmiecik" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-                  <div className="text-center">
-                    <div className="font-heading text-8xl text-primary/20">EDGAR</div>
-                  </div>
-                </div>
               </div>
               <div className="absolute -bottom-4 -right-4 bg-primary text-primary-foreground px-4 py-2 rounded-md font-semibold text-sm flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
