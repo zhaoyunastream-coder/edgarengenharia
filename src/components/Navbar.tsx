@@ -76,6 +76,9 @@ export default function Navbar() {
             >
               Solicitar Orçamento
             </Link>
+            <Link to="/admin" title="Área do Admin" className="text-muted-foreground/40 hover:text-muted-foreground transition-colors">
+              <LogIn className="w-4 h-4" />
+            </Link>
           </div>
 
           <button
