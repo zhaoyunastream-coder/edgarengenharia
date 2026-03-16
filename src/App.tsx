@@ -7,7 +7,7 @@ import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
-import SeedBlog from "./pages/SeedBlog";
+
 
 const queryClient = new QueryClient();
 
