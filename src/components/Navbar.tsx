@@ -46,7 +46,7 @@ export default function Navbar() {
       }`}>
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1">
-            <span className="font-heading text-3xl text-primary">EAK</span>
+            <span className="font-heading text-3xl text-primary">EDGAR</span>
             <span className="font-heading text-3xl text-foreground">Engenharia</span>
           </Link>
 

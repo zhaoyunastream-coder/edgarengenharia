@@ -154,7 +154,7 @@ export default function BlogPostPage() {
                   {related.map((r) => (
                     <Link key={r.id} to={`/blog/${r.slug}`} className="group">
                       <div className="bg-card border border-border rounded-lg overflow-hidden hover:border-primary/50 transition-all">
-                        <div className="aspect-video bg-muted flex items-center justify-center font-heading text-2xl text-muted-foreground/20">EAK</div>
+                        <div className="aspect-video bg-muted flex items-center justify-center font-heading text-2xl text-muted-foreground/20">EDGAR</div>
                         <div className="p-4">
                           <h4 className="font-heading text-lg group-hover:text-primary transition-colors">{r.title}</h4>
                         </div>

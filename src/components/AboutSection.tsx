@@ -28,7 +28,7 @@ export default function AboutSection() {
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent" />
                 <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
                   <div className="text-center">
-                    <div className="font-heading text-8xl text-primary/20">EAK</div>
+                    <div className="font-heading text-8xl text-primary/20">EDGAR</div>
                   </div>
                 </div>
               </div>

@@ -68,7 +68,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} EAK Engenharia. Todos os direitos reservados.
+          © {new Date().getFullYear()} Edgar Engenharia. Todos os direitos reservados.
         </div>
       </div>
     </footer>
