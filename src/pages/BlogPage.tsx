@@ -5,7 +5,7 @@ import { Search, Calendar, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import ChatWidget from '@/components/ChatWidget';
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -157,7 +157,7 @@ export default function BlogPage() {
         </div>
       </div>
       <Footer />
-      <WhatsAppButton />
+      <ChatWidget />
     </div>
   );
 }

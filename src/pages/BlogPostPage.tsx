@@ -5,7 +5,7 @@ import { ArrowLeft, Calendar, Share2, MessageCircle, Linkedin, Copy } from 'luci
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import ChatWidget from '@/components/ChatWidget';
 import { toast } from '@/hooks/use-toast';
 
 export default function BlogPostPage() {
@@ -168,7 +168,7 @@ export default function BlogPostPage() {
         </div>
       </article>
       <Footer />
-      <WhatsAppButton />
+      <ChatWidget />
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { MapPin, MessageCircle, Mail, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import ChatWidget from '@/components/ChatWidget';
 import { toast } from '@/hooks/use-toast';
 
 const contactSchema = z.object({
@@ -110,7 +110,7 @@ export default function ContactPage() {
               <div className="bg-card border border-border rounded-lg p-6">
                 <h3 className="font-heading text-2xl mb-6">Informações de Contato</h3>
                 <div className="space-y-5">
-                  <a href="https://wa.me/5554999999999" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
+                  <a href="https://wa.me/5554997014995" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <MessageCircle className="w-5 h-5 text-primary" />
                     </div>
@@ -128,7 +128,7 @@ export default function ContactPage() {
                       <p className="text-sm">contato@eakengenharia.com.br</p>
                     </div>
                   </a>
-                  <a href="tel:+5554999999999" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
+                  <a href="tel:+5554997014995" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Phone className="w-5 h-5 text-primary" />
                     </div>
@@ -154,7 +154,7 @@ export default function ContactPage() {
         </div>
       </div>
       <Footer />
-      <WhatsAppButton />
+      <ChatWidget />
     </div>
   );
 }

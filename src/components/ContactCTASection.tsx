@@ -18,7 +18,7 @@ export default function ContactCTASection() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <a
-              href="https://wa.me/5554999999999"
+              href="https://wa.me/5554997014995"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold flex items-center justify-center gap-2 hover:brightness-110 transition-all"
@@ -32,7 +32,7 @@ export default function ContactCTASection() {
               <Mail className="w-5 h-5" /> E-mail
             </a>
             <a
-              href="tel:+5554999999999"
+              href="tel:+5554997014995"
               className="border border-border text-foreground px-6 py-3 rounded-md font-semibold flex items-center justify-center gap-2 hover:border-primary hover:text-primary transition-all"
             >
               <Phone className="w-5 h-5" /> Telefone
