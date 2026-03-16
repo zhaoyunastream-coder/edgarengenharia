@@ -12,7 +12,7 @@ const education = [
   { year: '2022', title: 'Pós em Estruturas de Concreto Armado' },
 ];
 
-const softwares = ['AutoCAD', 'SketchUp', 'Revit', 'MS Project', 'Navisworks', 'Eberick'];
+
 
 export default function AboutSection() {
   const { ref, controls, variants } = useScrollReveal();
