@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -75,6 +75,9 @@ export default function Navbar() {
               className="bg-primary text-primary-foreground px-5 py-2 rounded-md text-sm font-semibold hover:brightness-110 transition-all"
             >
               Solicitar Orçamento
+            </Link>
+            <Link to="/admin" title="Área do Admin" className="text-muted-foreground/40 hover:text-muted-foreground transition-colors">
+              <LogIn className="w-4 h-4" />
             </Link>
           </div>
 
