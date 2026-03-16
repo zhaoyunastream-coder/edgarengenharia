@@ -7,6 +7,7 @@ import BlogPage from "./pages/BlogPage";
 import BlogPostPage from "./pages/BlogPostPage";
 import ContactPage from "./pages/ContactPage";
 import NotFound from "./pages/NotFound";
+import SeedBlog from "./pages/SeedBlog";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/contato" element={<ContactPage />} />
+          <Route path="/seed-blog" element={<SeedBlog />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
