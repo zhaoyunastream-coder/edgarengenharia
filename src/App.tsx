@@ -21,7 +21,7 @@ const App = () => (
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/contato" element={<ContactPage />} />
-          <Route path="/seed-blog" element={<SeedBlog />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
