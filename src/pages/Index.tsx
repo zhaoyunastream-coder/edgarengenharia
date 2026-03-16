@@ -19,7 +19,7 @@ const Index = () => {
       <BlogPreviewSection />
       <ContactCTASection />
       <Footer />
-      <WhatsAppButton />
+      <ChatWidget />
     </div>
   );
 };
