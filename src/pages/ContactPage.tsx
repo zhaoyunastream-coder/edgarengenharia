@@ -119,13 +119,13 @@ export default function ContactPage() {
                       <p className="text-sm">(54) 99999-9999</p>
                     </div>
                   </a>
-                  <a href="mailto:contato@eakengenharia.com.br" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
+                  <a href="mailto:contato@engenheiroedgar.com.br" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Mail className="w-5 h-5 text-primary" />
                     </div>
                     <div>
                       <p className="text-sm font-semibold text-foreground">E-mail</p>
-                      <p className="text-sm">contato@eakengenharia.com.br</p>
+                      <p className="text-sm">contato@engenheiroedgar.com.br</p>
                     </div>
                   </a>
                   <a href="tel:+5554999787256" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
