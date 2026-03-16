@@ -65,8 +65,9 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Edgar Engenharia. Todos os direitos reservados.
+        <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground space-y-1">
+          <p>© {new Date().getFullYear()} Edgar Engenharia. Todos os direitos reservados.</p>
+          <p>Desenvolvido com ❤️ pela FW Digital | <a href="https://agenciafw.com.br/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">agenciafw.com.br</a></p>
         </div>
       </div>
     </footer>
