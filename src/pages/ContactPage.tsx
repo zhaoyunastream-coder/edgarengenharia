@@ -110,7 +110,7 @@ export default function ContactPage() {
               <div className="bg-card border border-border rounded-lg p-6">
                 <h3 className="font-heading text-2xl mb-6">Informações de Contato</h3>
                 <div className="space-y-5">
-                  <a href="https://wa.me/5554999787256" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors"> target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors"> target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
+                  <a href="https://wa.me/5554999787256" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <MessageCircle className="w-5 h-5 text-primary" />
                     </div>
