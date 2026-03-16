@@ -37,7 +37,7 @@ const services = [
 
 const contactInfo = [
   { icon: MessageCircle, label: 'WhatsApp', value: '(54) 99978-7256', href: 'https://wa.me/5554999787256' },
-  { icon: Mail, label: 'E-mail', value: 'edgar@eakengenharia.com.br', href: 'mailto:edgar@eakengenharia.com.br' },
+  { icon: Mail, label: 'E-mail', value: 'contato@engenheiroedgar.com.br', href: 'mailto:contato@engenheiroedgar.com.br' },
   { icon: MapPin, label: 'Localização', value: 'Carazinho, RS' },
   { icon: Award, label: 'CREA-RS', value: '243302' },
 ];
