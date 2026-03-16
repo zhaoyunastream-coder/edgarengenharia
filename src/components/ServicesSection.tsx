@@ -6,14 +6,14 @@ import {
 } from 'lucide-react';
 
 const services = [
+  { icon: Calculator, title: 'INSS de Obras', desc: 'Cálculo e redução legal do INSS sobre obras, garantindo economia e conformidade fiscal.', highlight: true },
+  { icon: Flame, title: 'PPCI', desc: 'Projetos de Prevenção Contra Incêndio conforme normas do Corpo de Bombeiros.', highlight: true },
   { icon: Building2, title: 'Projetos e Execução de Obras', desc: 'Acompanhamento, gerenciamento e execução completa de obras residenciais, comerciais e industriais.' },
   { icon: Layers, title: 'Compatibilização BIM', desc: 'Integração de projetos multidisciplinares com tecnologia BIM para evitar conflitos em obra.' },
   { icon: FileCheck, title: 'Regularização de Imóveis', desc: 'Adequação documental e técnica para regularizar seu imóvel junto aos órgãos competentes.' },
-  { icon: Calculator, title: 'INSS de Obras', desc: 'Cálculo e redução legal do INSS sobre obras, garantindo economia e conformidade fiscal.' },
   { icon: LandPlot, title: 'Desmembramento e Unificação', desc: 'Processos de desmembramento e unificação de terrenos com agilidade e segurança jurídica.' },
   { icon: Ruler, title: 'Cálculos Estruturais', desc: 'Dimensionamento estrutural seguro e otimizado para concreto armado, aço e madeira.' },
   { icon: Building, title: 'Incorporação de Imóveis', desc: 'Assessoria completa para incorporação imobiliária, do memorial à entrega das unidades.' },
-  { icon: Flame, title: 'PPCI', desc: 'Projetos de Prevenção Contra Incêndio conforme normas do Corpo de Bombeiros.' },
   { icon: Accessibility, title: 'Projetos de Acessibilidade', desc: 'Adequação de edificações às normas de acessibilidade universal (NBR 9050).' },
   { icon: Search, title: 'Perícias e Laudos', desc: 'Laudos técnicos, vistorias e perícias na construção civil com embasamento normativo.' },
   { icon: Zap, title: 'Projetos Elétricos', desc: 'Projetos elétricos residenciais e comerciais em conformidade com a NBR 5410.' },
