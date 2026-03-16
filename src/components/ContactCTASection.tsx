@@ -36,7 +36,7 @@ const services = [
 ];
 
 const contactInfo = [
-  { icon: MessageCircle, label: 'WhatsApp', value: '(54) 9701-4995', href: 'https://wa.me/5554997014995' },
+  { icon: MessageCircle, label: 'WhatsApp', value: '(54) 99978-7256', href: 'https://wa.me/5554999787256' },
   { icon: Mail, label: 'E-mail', value: 'edgar@eakengenharia.com.br', href: 'mailto:edgar@eakengenharia.com.br' },
   { icon: MapPin, label: 'Localização', value: 'Carazinho, RS' },
   { icon: Award, label: 'CREA-RS', value: '243302' },
@@ -140,7 +140,7 @@ export default function ContactCTASection() {
               {[
                 { icon: Instagram, href: '#' },
                 { icon: Linkedin, href: '#' },
-                { icon: MessageCircle, href: 'https://wa.me/5554997014995' },
+                { icon: MessageCircle, href: 'https://wa.me/5554999787256' },
               ].map(({ icon: Icon, href }, i) => (
                 <a
                   key={i}

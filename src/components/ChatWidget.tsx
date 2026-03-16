@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { X, Send, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const WHATSAPP_URL = 'https://wa.me/5554997014995';
+const WHATSAPP_URL = 'https://wa.me/5554999787256';
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
