@@ -4,6 +4,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Save, Send, Loader2, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 const categories = [
   'BIM e Tecnologia',
@@ -179,14 +180,8 @@ export default function AdminPostEditor() {
 
         {/* Content */}
         <div>
-          <label className="block text-sm text-muted-foreground mb-1.5">Conteúdo (HTML)</label>
-          <textarea
-            value={form.content}
-            onChange={(e) => update('content', e.target.value)}
-            rows={16}
-            className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-primary transition-colors resize-y font-mono text-sm"
-            placeholder="<p>Conteúdo do post...</p>"
-          />
+          <label className="block text-sm text-muted-foreground mb-1.5">Conteúdo</label>
+          <RichTextEditor content={form.content} onChange={(html) => update('content', html)} />
         </div>
 
         {/* SEO */}
