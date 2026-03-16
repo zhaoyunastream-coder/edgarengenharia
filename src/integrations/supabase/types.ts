@@ -22,6 +22,8 @@ export type Database = {
           created_at: string | null
           excerpt: string | null
           id: string
+          meta_description: string | null
+          meta_title: string | null
           published: boolean | null
           published_at: string | null
           slug: string
@@ -35,6 +37,8 @@ export type Database = {
           created_at?: string | null
           excerpt?: string | null
           id?: string
+          meta_description?: string | null
+          meta_title?: string | null
           published?: boolean | null
           published_at?: string | null
           slug: string
@@ -48,11 +52,46 @@ export type Database = {
           created_at?: string | null
           excerpt?: string | null
           id?: string
+          meta_description?: string | null
+          meta_title?: string | null
           published?: boolean | null
           published_at?: string | null
           slug?: string
           title?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      contact_submissions: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string | null
+          name: string
+          phone: string | null
+          read: boolean
+          service: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message?: string | null
+          name: string
+          phone?: string | null
+          read?: boolean
+          service?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string | null
+          read?: boolean
+          service?: string | null
         }
         Relationships: []
       }
