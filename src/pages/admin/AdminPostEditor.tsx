@@ -4,6 +4,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Save, Send, Loader2, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import RichTextEditor from '@/components/admin/RichTextEditor';
 
 const categories = [
   'BIM e Tecnologia',
