@@ -60,8 +60,6 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-lg mb-4">Redes Sociais</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Instagram</a></li>
-              <li><a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">LinkedIn</a></li>
               <li><a href="https://wa.me/5554999999999" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">WhatsApp</a></li>
             </ul>
           </div>
