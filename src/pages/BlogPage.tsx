@@ -101,7 +101,7 @@ export default function BlogPage() {
                       {featured.cover_image ? (
                         <img src={featured.cover_image} alt={featured.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center font-heading text-5xl text-muted-foreground/20">EAK</div>
+                        <div className="w-full h-full flex items-center justify-center font-heading text-5xl text-muted-foreground/20">EDGAR</div>
                       )}
                     </div>
                     <div className="p-8 flex flex-col justify-center">
@@ -133,7 +133,7 @@ export default function BlogPage() {
                           {post.cover_image ? (
                             <img src={post.cover_image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center font-heading text-3xl text-muted-foreground/20">EAK</div>
+                            <div className="w-full h-full flex items-center justify-center font-heading text-3xl text-muted-foreground/20">EDGAR</div>
                           )}
                           {post.category && (
                             <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">{post.category}</span>

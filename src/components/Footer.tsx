@@ -20,7 +20,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-1 mb-4">
-              <span className="font-heading text-3xl text-primary">EAK</span>
+              <span className="font-heading text-3xl text-primary">EDGAR</span>
               <span className="font-heading text-3xl text-foreground">Engenharia</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -68,7 +68,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} EAK Engenharia. Todos os direitos reservados.
+          © {new Date().getFullYear()} Edgar Engenharia. Todos os direitos reservados.
         </div>
       </div>
     </footer>

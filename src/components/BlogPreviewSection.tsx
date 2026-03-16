@@ -48,7 +48,7 @@ export default function BlogPreviewSection() {
                         {post.cover_image ? (
                           <img src={post.cover_image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-muted-foreground font-heading text-3xl">EAK</div>
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground font-heading text-3xl">EDGAR</div>
                         )}
                         {post.category && (
                           <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">{post.category}</span>
