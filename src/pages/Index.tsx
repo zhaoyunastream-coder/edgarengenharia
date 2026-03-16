@@ -6,7 +6,7 @@ import DifferentialsSection from '@/components/DifferentialsSection';
 import BlogPreviewSection from '@/components/BlogPreviewSection';
 import ContactCTASection from '@/components/ContactCTASection';
 import Footer from '@/components/Footer';
-import WhatsAppButton from '@/components/WhatsAppButton';
+import ChatWidget from '@/components/ChatWidget';
 
 const Index = () => {
   return (
