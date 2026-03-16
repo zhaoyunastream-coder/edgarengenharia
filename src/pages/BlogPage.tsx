@@ -101,7 +101,7 @@ export default function BlogPage() {
                       {featured.cover_image ? (
                         <img src={featured.cover_image} alt={featured.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center font-heading text-5xl text-muted-foreground/20">EAK</div>
+                        <div className="w-full h-full flex items-center justify-center font-heading text-5xl text-muted-foreground/20">EDGAR</div>
                       )}
                     </div>
                     <div className="p-8 flex flex-col justify-center">
