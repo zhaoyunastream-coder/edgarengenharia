@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import { BadgeCheck } from 'lucide-react';
-import logo from '@/assets/logo-transparent.png';
 
 const serviceLinks = [
   'Projetos e Execução', 'Compatibilização BIM', 'Regularização de Imóveis',
@@ -21,7 +20,8 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-1 mb-4">
-              <img src={logo} alt="Edgar Engenharia" className="h-14 invert brightness-200" />
+              <span className="font-heading text-3xl text-primary">EDGAR</span>
+              <span className="font-heading text-3xl text-foreground">Engenharia</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Soluções completas em Engenharia Civil em Carazinho/RS e região.

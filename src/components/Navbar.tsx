@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import logo from '@/assets/logo-transparent.png';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -47,7 +46,8 @@ export default function Navbar() {
       }`}>
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1">
-            <img src={logo} alt="Edgar Engenharia" className="h-10 invert brightness-200" />
+            <span className="font-heading text-3xl text-primary">EDGAR</span>
+            <span className="font-heading text-3xl text-foreground">Engenharia</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
