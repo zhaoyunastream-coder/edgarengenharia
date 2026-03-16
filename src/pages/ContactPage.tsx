@@ -128,7 +128,7 @@ export default function ContactPage() {
                       <p className="text-sm">contato@eakengenharia.com.br</p>
                     </div>
                   </a>
-                  <a href="tel:+5554999787256" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors"> className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors"> className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
+                  <a href="tel:+5554999787256" className="flex items-center gap-4 text-muted-foreground hover:text-primary transition-colors">
                     <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                       <Phone className="w-5 h-5 text-primary" />
                     </div>
