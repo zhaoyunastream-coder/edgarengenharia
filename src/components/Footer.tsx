@@ -60,7 +60,7 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-lg mb-4">Redes Sociais</h4>
             <ul className="space-y-2">
-              <li><a href="https://wa.me/5554997014995" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">WhatsApp</a></li>
+              <li><a <li><a href="https://wa.me/5554999787256" target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">WhatsApp</a></li> target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors">WhatsApp</a></li>
             </ul>
           </div>
         </div>

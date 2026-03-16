@@ -88,7 +88,7 @@ export default function HeroSection() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
             <a
-              href="https://wa.me/5554997014995"
+              href="https://wa.me/5554999787256"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-primary text-primary-foreground px-8 py-3 rounded-md font-semibold flex items-center justify-center gap-2 hover:brightness-110 transition-all"

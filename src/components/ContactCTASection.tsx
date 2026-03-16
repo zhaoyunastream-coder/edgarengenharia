@@ -140,7 +140,7 @@ export default function ContactCTASection() {
               {[
                 { icon: Instagram, href: '#' },
                 { icon: Linkedin, href: '#' },
-                { icon: MessageCircle, href: 'https://wa.me/5554997014995' },
+                { icon: MessageCircle, href: 'https://wa.me/5554999787256' },
               ].map(({ icon: Icon, href }, i) => (
                 <a
                   key={i}
