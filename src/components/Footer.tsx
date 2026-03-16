@@ -20,7 +20,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-1 mb-4">
-              <span className="font-heading text-3xl text-primary">EAK</span>
+              <span className="font-heading text-3xl text-primary">EDGAR</span>
               <span className="font-heading text-3xl text-foreground">Engenharia</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
