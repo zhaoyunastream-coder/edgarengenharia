@@ -157,7 +157,7 @@ export default function BlogPage() {
         </div>
       </div>
       <Footer />
-      <WhatsAppButton />
+      <ChatWidget />
     </div>
   );
 }

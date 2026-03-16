@@ -154,7 +154,7 @@ export default function ContactPage() {
         </div>
       </div>
       <Footer />
-      <WhatsAppButton />
+      <ChatWidget />
     </div>
   );
 }
