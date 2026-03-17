@@ -44,14 +44,19 @@ export default function ContactPage() {
   const onSubmit = async (data: ContactForm) => {
     setSubmitting(true);
     const { error } = await supabase.from('contact_submissions').insert([data]);
-    setSubmitting(false);
 
     if (error) {
+      setSubmitting(false);
       toast({ title: 'Erro ao enviar', description: 'Tente novamente mais tarde.', variant: 'destructive' });
-    } else {
-      toast({ title: 'Mensagem enviada!', description: 'Retornaremos em breve.' });
-      reset();
+      return;
     }
+
+    // Send email notifications (non-blocking)
+    supabase.functions.invoke('send-contact-email', { body: data }).catch(console.error);
+
+    setSubmitting(false);
+    toast({ title: 'Mensagem enviada!', description: 'Retornaremos em breve.' });
+    reset();
   };
 
   const inputClasses = "w-full bg-card border border-border rounded-md px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors";

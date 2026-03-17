@@ -56,16 +56,21 @@ export default function ContactCTASection() {
     setSubmitting(true);
     const { whatsapp_consent, ...submission } = data;
     const { error } = await supabase.from('contact_submissions').insert([{ ...submission }]);
-    setSubmitting(false);
 
     if (error) {
+      setSubmitting(false);
       toast({ title: 'Erro ao enviar', description: 'Tente novamente mais tarde.', variant: 'destructive' });
-    } else {
-      setSuccess(true);
-      toast({ title: 'Mensagem enviada!', description: 'Retornaremos em breve.' });
-      reset();
-      setTimeout(() => setSuccess(false), 5000);
+      return;
     }
+
+    // Send email notifications (non-blocking)
+    supabase.functions.invoke('send-contact-email', { body: submission }).catch(console.error);
+
+    setSubmitting(false);
+    setSuccess(true);
+    toast({ title: 'Mensagem enviada!', description: 'Retornaremos em breve.' });
+    reset();
+    setTimeout(() => setSuccess(false), 5000);
   };
 
   const inputClasses =
