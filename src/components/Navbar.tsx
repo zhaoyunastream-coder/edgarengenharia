@@ -46,8 +46,8 @@ export default function Navbar() {
       }`}>
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-1">
-            <span className="font-heading text-3xl text-primary">EDGAR</span>
-            <span className="font-heading text-3xl text-foreground">Engenharia</span>
+            <span className="font-heading text-3xl text-primary">ENGENHEIRO</span>
+            <span className="font-heading text-3xl text-foreground">Edgar</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

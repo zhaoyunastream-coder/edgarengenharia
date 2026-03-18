@@ -35,7 +35,7 @@ export default function DifferentialsSection() {
           <div className="text-center mb-16">
             <p className="text-primary font-semibold text-sm tracking-widest uppercase mb-2">Diferenciais</p>
             <h2 className="text-4xl md:text-5xl font-heading">
-              Por que escolher a <span className="text-gradient">Edgar Engenharia</span>
+              Por que escolher o <span className="text-gradient">Engenheiro Edgar</span>
             </h2>
           </div>
 

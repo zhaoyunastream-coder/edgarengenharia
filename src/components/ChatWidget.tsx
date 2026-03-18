@@ -44,7 +44,7 @@ export default function ChatWidget() {
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center font-heading text-lg text-foreground">E</div>
                 <div>
-                  <p className="font-semibold text-sm text-foreground">Edgar Engenharia</p>
+                  <p className="font-semibold text-sm text-foreground">Engenheiro Edgar</p>
                   <p className="text-xs text-emerald-200">Online agora</p>
                 </div>
               </div>
