@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
           </a>
         </div>
         <p style="font-size: 13px; color: #4A5568; text-align: center; margin-top: 24px;">
-          EDGAR Engenharia — Carazinho/RS<br/>
+          Engenheiro Edgar — Carazinho/RS<br/>
           contato@engenheiroedgar.com.br
         </p>
       </div>
