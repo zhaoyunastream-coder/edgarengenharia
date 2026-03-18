@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'EDGAR Engenharia <contato@engenheiroedgar.com.br>',
+        from: 'Engenheiro Edgar <contato@engenheiroedgar.com.br>',
         to: ['edgarkmiecik80@gmail.com'],
         subject: `🔔 Novo contato: ${name}${service ? ` — ${service}` : ''}`,
         html: notificationHtml,
@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
     const confirmHtml = `
       <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0D1117; color: #E2E8F0; padding: 32px; border-radius: 12px;">
         <div style="text-align: center; padding-bottom: 24px; border-bottom: 2px solid #F59E0B; margin-bottom: 24px;">
-          <h1 style="color: #F59E0B; font-size: 24px; margin: 0;">EDGAR Engenharia</h1>
+          <h1 style="color: #F59E0B; font-size: 24px; margin: 0;">Engenheiro Edgar</h1>
           <p style="color: #94A3B8; margin: 8px 0 0; font-size: 14px;">Engenheiro Civil — CREA-RS 243302</p>
         </div>
         <h2 style="color: #F1F5F9; font-size: 20px;">Olá, ${name}! ✅</h2>
@@ -81,7 +81,7 @@ Deno.serve(async (req) => {
           </a>
         </div>
         <p style="font-size: 13px; color: #4A5568; text-align: center; margin-top: 24px;">
-          EDGAR Engenharia — Carazinho/RS<br/>
+          Engenheiro Edgar — Carazinho/RS<br/>
           contato@engenheiroedgar.com.br
         </p>
       </div>
@@ -94,9 +94,9 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'EDGAR Engenharia <contato@engenheiroedgar.com.br>',
+        from: 'Engenheiro Edgar <contato@engenheiroedgar.com.br>',
         to: [email],
-        subject: '✅ Edgar recebeu sua mensagem — EDGAR Engenharia',
+        subject: '✅ Edgar recebeu sua mensagem — Engenheiro Edgar',
         html: confirmHtml,
       }),
     });

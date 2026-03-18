@@ -103,10 +103,9 @@ export default function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
-            className="grid grid-cols-3 gap-8 max-w-xl mx-auto"
+            className="grid grid-cols-2 gap-8 max-w-md mx-auto"
           >
             <StatItem value={15} suffix="+" label="Anos de Experiência" />
-            <StatItem value={200} suffix="+" label="Projetos Entregues" />
             <StatItem value={100} suffix="%" label="Regularizados" />
           </motion.div>
         </div>

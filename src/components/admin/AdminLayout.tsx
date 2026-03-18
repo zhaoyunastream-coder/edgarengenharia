@@ -82,7 +82,7 @@ export default function AdminLayout() {
               <Menu className="w-5 h-5" />
             </button>
             <span className="text-sm font-medium text-muted-foreground">
-              Painel Admin — <span className="text-foreground">EDGAR Engenharia</span>
+              Painel Admin — <span className="text-foreground">Engenheiro Edgar</span>
             </span>
           </div>
           <button

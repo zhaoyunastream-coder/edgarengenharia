@@ -20,8 +20,8 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-1 mb-4">
-              <span className="font-heading text-3xl text-primary">EDGAR</span>
-              <span className="font-heading text-3xl text-foreground">Engenharia</span>
+              <span className="font-heading text-3xl text-primary">ENGENHEIRO</span>
+              <span className="font-heading text-3xl text-foreground">Edgar</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Soluções completas em Engenharia Civil em Carazinho/RS e região.
@@ -66,7 +66,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-border pt-8 text-center text-sm text-muted-foreground space-y-1">
-          <p>© {new Date().getFullYear()} Edgar Engenharia. Todos os direitos reservados.</p>
+          <p>© {new Date().getFullYear()} Engenheiro Edgar. Todos os direitos reservados.</p>
           <p>Desenvolvido com ❤️ pela <a href="https://agenciafw.com.br/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">agenciafw.com.br</a></p>
         </div>
       </div>
