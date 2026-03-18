@@ -94,9 +94,9 @@ Deno.serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'EDGAR Engenharia <contato@engenheiroedgar.com.br>',
+        from: 'Engenheiro Edgar <contato@engenheiroedgar.com.br>',
         to: [email],
-        subject: '✅ Edgar recebeu sua mensagem — EDGAR Engenharia',
+        subject: '✅ Edgar recebeu sua mensagem — Engenheiro Edgar',
         html: confirmHtml,
       }),
     });
