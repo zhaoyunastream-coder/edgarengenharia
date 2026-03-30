@@ -6,6 +6,7 @@ export default function WhatsAppButton() {
       href="https://wa.me/5554999787256"
       target="_blank"
       rel="noopener noreferrer"
+      onClick={() => { if (window.gtag) window.gtag('event', 'conversion_whatsapp', { event_category: 'contato', event_label: 'botao_flutuante' }); }}
       className="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110"
       aria-label="WhatsApp"
     >
