@@ -91,6 +91,7 @@ export default function HeroSection() {
               href="https://wa.me/5554999787256"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => { if (window.gtag) window.gtag('event', 'conversion_whatsapp', { event_category: 'contato', event_label: 'hero_whatsapp' }); }}
               className="bg-primary text-primary-foreground px-8 py-3 rounded-md font-semibold flex items-center justify-center gap-2 hover:brightness-110 transition-all"
             >
               <MessageCircle className="w-4 h-4" />

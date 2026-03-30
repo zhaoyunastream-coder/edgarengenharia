@@ -68,6 +68,7 @@ export default function ContactCTASection() {
 
     setSubmitting(false);
     setSuccess(true);
+    if (window.gtag) window.gtag('event', 'conversion_formulario', { event_category: 'contato', event_label: 'formulario_orcamento' });
     toast({ title: 'Mensagem enviada!', description: 'Retornaremos em breve.' });
     reset();
     setTimeout(() => setSuccess(false), 5000);
