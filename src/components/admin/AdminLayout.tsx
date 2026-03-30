@@ -1,6 +1,6 @@
 import { Navigate, Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
-import { LayoutDashboard, FileText, PenSquare, Mail, LogOut, Menu, X, Loader2 } from 'lucide-react';
+import { LayoutDashboard, FileText, PenSquare, Mail, BarChart2, LogOut, Menu, X, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 const sidebarLinks = [
