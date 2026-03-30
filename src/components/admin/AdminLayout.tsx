@@ -1,6 +1,6 @@
 import { Navigate, Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/use-auth';
-import { LayoutDashboard, FileText, PenSquare, Mail, LogOut, Menu, X, Loader2 } from 'lucide-react';
+import { LayoutDashboard, FileText, PenSquare, Mail, BarChart2, LogOut, Menu, X, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 const sidebarLinks = [
@@ -8,6 +8,7 @@ const sidebarLinks = [
   { label: 'Posts', href: '/admin/posts', icon: FileText },
   { label: 'Novo Post', href: '/admin/posts/new', icon: PenSquare },
   { label: 'Contatos', href: '/admin/contatos', icon: Mail },
+  { label: 'Analytics', href: '/admin/analytics', icon: BarChart2 },
 ];
 
 export default function AdminLayout() {
