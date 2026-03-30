@@ -38,6 +38,7 @@ const App = () => (
               <Route path="/admin/posts/new" element={<AdminPostEditor />} />
               <Route path="/admin/posts/edit/:id" element={<AdminPostEditor />} />
               <Route path="/admin/contatos" element={<AdminContacts />} />
+              <Route path="/admin/analytics" element={<AdminAnalytics />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
