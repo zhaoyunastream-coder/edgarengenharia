@@ -124,7 +124,7 @@ export default function AdminPostEditor() {
   };
 
   // --- Image upload helpers ---
-  const handleImageUpload = async (file: File) => {
+  const handleFileSelected = (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast({ title: 'Apenas imagens são permitidas', variant: 'destructive' });
       return;
@@ -133,14 +133,18 @@ export default function AdminPostEditor() {
       toast({ title: 'Imagem deve ter no máximo 5MB', variant: 'destructive' });
       return;
     }
+    setCropFile(file);
+  };
 
+  const handleCropConfirm = async (blob: Blob) => {
+    setCropFile(null);
     setUploading(true);
-    const ext = file.name.split('.').pop() || 'jpg';
-    const path = `blog-covers/${Date.now()}.${ext}`;
+    const path = `blog-covers/${Date.now()}.webp`;
 
-    const { error } = await supabase.storage.from('blog-images').upload(path, file, {
+    const { error } = await supabase.storage.from('blog-images').upload(path, blob, {
       cacheControl: '3600',
       upsert: false,
+      contentType: 'image/webp',
     });
 
     if (error) {
@@ -159,12 +163,7 @@ export default function AdminPostEditor() {
     e.preventDefault();
     setDragOver(false);
     const file = e.dataTransfer.files?.[0];
-    if (file) handleImageUpload(file);
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) handleImageUpload(file);
+    if (file) handleFileSelected(file);
     e.target.value = '';
   };
 
