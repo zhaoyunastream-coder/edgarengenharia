@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { Save, Send, Loader2, ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { Save, Send, Loader2, ArrowLeft, Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
 import RichTextEditor from '@/components/admin/RichTextEditor';
 
-const categories = [
+const DEFAULT_CATEGORIES = [
   'BIM e Tecnologia',
   'Regularização de Imóveis',
   'INSS de Obras',
@@ -16,6 +16,19 @@ const categories = [
   'Incorporação de Imóveis',
   'Outro',
 ];
+
+const CUSTOM_CATEGORIES_KEY = 'edgar_blog_categories';
+
+function getCustomCategories(): string[] {
+  try {
+    const stored = localStorage.getItem(CUSTOM_CATEGORIES_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch { return []; }
+}
+
+function saveCustomCategories(cats: string[]) {
+  localStorage.setItem(CUSTOM_CATEGORIES_KEY, JSON.stringify(cats));
+}
 
 function slugify(text: string) {
   return text
@@ -31,6 +44,7 @@ export default function AdminPostEditor() {
   const isEdit = !!id;
   const navigate = useNavigate();
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     title: '',
@@ -45,6 +59,13 @@ export default function AdminPostEditor() {
   });
   const [autoSlug, setAutoSlug] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [customCategories, setCustomCategories] = useState<string[]>(getCustomCategories());
+  const [showNewCategory, setShowNewCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+
+  const allCategories = [...DEFAULT_CATEGORIES, ...customCategories];
 
   const { isLoading } = useQuery({
     queryKey: ['admin-post', id],
@@ -60,8 +81,8 @@ export default function AdminPostEditor() {
           excerpt: data.excerpt || '',
           content: data.content || '',
           published: !!data.published,
-          meta_title: (data as any).meta_title || '',
-          meta_description: (data as any).meta_description || '',
+          meta_title: data.meta_title || '',
+          meta_description: data.meta_description || '',
         });
         setAutoSlug(false);
       }
@@ -76,6 +97,74 @@ export default function AdminPostEditor() {
   }, [form.title, autoSlug]);
 
   const update = (key: string, value: string | boolean) => setForm((f) => ({ ...f, [key]: value }));
+
+  // --- Category helpers ---
+  const handleAddCategory = () => {
+    const name = newCategoryName.trim();
+    if (!name) return;
+    if (allCategories.includes(name)) {
+      toast({ title: 'Categoria já existe', variant: 'destructive' });
+      return;
+    }
+    const updated = [...customCategories, name];
+    setCustomCategories(updated);
+    saveCustomCategories(updated);
+    update('category', name);
+    setNewCategoryName('');
+    setShowNewCategory(false);
+  };
+
+  const handleRemoveCategory = (cat: string) => {
+    const updated = customCategories.filter((c) => c !== cat);
+    setCustomCategories(updated);
+    saveCustomCategories(updated);
+    if (form.category === cat) update('category', '');
+  };
+
+  // --- Image upload helpers ---
+  const handleImageUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast({ title: 'Apenas imagens são permitidas', variant: 'destructive' });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: 'Imagem deve ter no máximo 5MB', variant: 'destructive' });
+      return;
+    }
+
+    setUploading(true);
+    const ext = file.name.split('.').pop() || 'jpg';
+    const path = `blog-covers/${Date.now()}.${ext}`;
+
+    const { error } = await supabase.storage.from('blog-images').upload(path, file, {
+      cacheControl: '3600',
+      upsert: false,
+    });
+
+    if (error) {
+      toast({ title: 'Erro no upload', description: error.message, variant: 'destructive' });
+      setUploading(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from('blog-images').getPublicUrl(path);
+    update('cover_image', urlData.publicUrl);
+    setUploading(false);
+    toast({ title: 'Imagem enviada com sucesso!' });
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) handleImageUpload(file);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleImageUpload(file);
+    e.target.value = '';
+  };
 
   const handleSave = async (publish: boolean) => {
     if (!form.title.trim() || !form.slug.trim()) {
@@ -149,19 +238,102 @@ export default function AdminPostEditor() {
         {/* Category */}
         <div>
           <label className="block text-sm text-muted-foreground mb-1.5">Categoria</label>
-          <select value={form.category} onChange={(e) => update('category', e.target.value)} className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-primary transition-colors">
-            <option value="">Selecione...</option>
-            {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
+          <div className="flex gap-2">
+            <select value={form.category} onChange={(e) => update('category', e.target.value)} className="flex-1 bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-primary transition-colors">
+              <option value="">Selecione...</option>
+              {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+            {!showNewCategory ? (
+              <button
+                type="button"
+                onClick={() => setShowNewCategory(true)}
+                className="flex items-center gap-1 px-3 py-2 border border-border rounded-lg text-sm text-muted-foreground hover:text-primary hover:border-primary transition-colors whitespace-nowrap"
+              >
+                <Plus className="w-4 h-4" /> Nova
+              </button>
+            ) : (
+              <div className="flex gap-1">
+                <input
+                  autoFocus
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddCategory()}
+                  className="bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors w-40"
+                  placeholder="Nome da categoria"
+                />
+                <button type="button" onClick={handleAddCategory} className="px-2 py-1 text-primary hover:text-primary/80 text-sm font-semibold">OK</button>
+                <button type="button" onClick={() => { setShowNewCategory(false); setNewCategoryName(''); }} className="px-2 py-1 text-muted-foreground hover:text-foreground text-sm">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+          {/* Custom category chips */}
+          {customCategories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {customCategories.map((cat) => (
+                <span key={cat} className="inline-flex items-center gap-1 px-2.5 py-1 bg-primary/10 text-primary text-xs rounded-full border border-primary/20">
+                  {cat}
+                  <button type="button" onClick={() => handleRemoveCategory(cat)} className="hover:text-destructive transition-colors">
+                    <X className="w-3 h-3" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Cover Image */}
+        {/* Cover Image Dropzone */}
         <div>
-          <label className="block text-sm text-muted-foreground mb-1.5">Imagem de Capa (URL)</label>
-          <input value={form.cover_image} onChange={(e) => update('cover_image', e.target.value)} className="w-full bg-card border border-border rounded-lg px-4 py-2.5 text-foreground focus:outline-none focus:border-primary transition-colors" placeholder="https://..." />
-          {form.cover_image && (
-            <div className="mt-2 rounded-lg overflow-hidden border border-border">
-              <img src={form.cover_image} alt="Preview" className="w-full h-48 object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
+          <label className="block text-sm text-muted-foreground mb-1.5">Imagem de Capa</label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          {!form.cover_image ? (
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+              className={`border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center gap-3 cursor-pointer transition-colors ${
+                dragOver ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+              }`}
+            >
+              {uploading ? (
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              ) : (
+                <>
+                  <Upload className="w-8 h-8 text-muted-foreground" />
+                  <div className="text-center">
+                    <p className="text-sm text-foreground">Clique ou arraste uma imagem</p>
+                    <p className="text-xs text-muted-foreground mt-1">PNG, JPG ou WebP • Máximo 5MB</p>
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="relative group rounded-lg overflow-hidden border border-border">
+              <img src={form.cover_image} alt="Capa" className="w-full h-48 object-cover" />
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:brightness-110 transition-all"
+                >
+                  Trocar
+                </button>
+                <button
+                  type="button"
+                  onClick={() => update('cover_image', '')}
+                  className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg text-sm font-semibold hover:brightness-110 transition-all"
+                >
+                  Remover
+                </button>
+              </div>
             </div>
           )}
         </div>
