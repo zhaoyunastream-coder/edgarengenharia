@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Save, Send, Loader2, ArrowLeft, Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import ImageCropModal from '@/components/admin/ImageCropModal';
 
 const DEFAULT_CATEGORIES = [
   'BIM e Tecnologia',
