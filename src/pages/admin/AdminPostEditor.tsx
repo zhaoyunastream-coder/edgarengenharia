@@ -164,6 +164,11 @@ export default function AdminPostEditor() {
     setDragOver(false);
     const file = e.dataTransfer.files?.[0];
     if (file) handleFileSelected(file);
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) handleFileSelected(file);
     e.target.value = '';
   };
 
@@ -291,7 +296,7 @@ export default function AdminPostEditor() {
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            onChange={handleFileSelect}
+            onChange={handleFileInputChange}
             className="hidden"
           />
           {!form.cover_image ? (
