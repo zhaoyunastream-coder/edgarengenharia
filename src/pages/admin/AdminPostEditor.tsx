@@ -387,6 +387,15 @@ export default function AdminPostEditor() {
           </button>
         </div>
       </div>
+
+      {/* Crop Modal */}
+      {cropFile && (
+        <ImageCropModal
+          file={cropFile}
+          onConfirm={handleCropConfirm}
+          onCancel={() => setCropFile(null)}
+        />
+      )}
     </div>
   );
 }
