@@ -65,6 +65,7 @@ export default function AdminPostEditor() {
   const [newCategoryName, setNewCategoryName] = useState('');
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [cropFile, setCropFile] = useState<File | null>(null);
 
   const allCategories = [...DEFAULT_CATEGORIES, ...customCategories];
 
