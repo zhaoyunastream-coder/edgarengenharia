@@ -2,14 +2,14 @@ name: Supabase Keep-Alive
 
 on:
   schedule:
-    - cron: '0 */8 * * *'
+    - cron: '0 10 */3 * *'
   workflow_dispatch:
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase
+      - name: Ping Supabase - Edgar Engenharia
         run: |
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
             "https://anqvmuufszvjvfnktefe.supabase.co/rest/v1/blog_posts?select=id&limit=1" \
@@ -19,6 +19,6 @@ jobs:
           if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ]; then
             echo "✅ Supabase respondeu OK"
           else
-            echo "⚠️ Resposta inesperada: $STATUS"
+            echo "❌ Supabase retornou erro: $STATUS"
             exit 1
           fi
