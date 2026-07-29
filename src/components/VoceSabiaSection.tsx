@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import { vocesabia } from '@/data/site-content';
+import { useSiteSection } from '@/hooks/use-site-items';
 
 export default function VoceSabiaSection() {
+  const { items } = useSiteSection('vocesabia', vocesabia);
   const [open, setOpen] = useState<number | null>(0);
 
   return (
@@ -13,11 +15,11 @@ export default function VoceSabiaSection() {
         <SectionHeading title="Você sabia ???" />
 
         <div className="max-w-4xl mx-auto space-y-4">
-          {vocesabia.map((item, i) => {
+          {items.map((item, i) => {
             const isOpen = open === i;
             return (
               <motion.article
-                key={item.title + i}
+                key={item.id}
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.1 }}
@@ -46,7 +48,7 @@ export default function VoceSabiaSection() {
                 </button>
                 {isOpen && (
                   <div className="px-4 pb-5 pt-0 text-[15px] text-foreground/80 leading-relaxed whitespace-pre-line">
-                    {item.desc}
+                    {item.description}
                   </div>
                 )}
               </motion.article>
