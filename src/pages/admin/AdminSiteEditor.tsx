@@ -93,6 +93,19 @@ export default function AdminSiteEditor() {
 
   const cfg = SECTIONS.find((s) => s.key === section)!;
 
+  const { data: counts = {} as Record<string, number>, isLoading: countsLoading } = useQuery({
+    queryKey: ['admin-site-counts'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('site_items').select('section');
+      if (error) throw error;
+      const map: Record<string, number> = {};
+      (data ?? []).forEach((r) => {
+        map[r.section as string] = (map[r.section as string] ?? 0) + 1;
+      });
+      return map;
+    },
+  });
+
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['admin-site-items', section],
     queryFn: async () => {
@@ -109,6 +122,7 @@ export default function AdminSiteEditor() {
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ['admin-site-items', section] });
     qc.invalidateQueries({ queryKey: ['site-items', section] });
+    qc.invalidateQueries({ queryKey: ['admin-site-counts'] });
   };
 
   const saveMutation = useMutation({
@@ -163,44 +177,42 @@ export default function AdminSiteEditor() {
   });
 
   const importMutation = useMutation({
-    mutationFn: async () => {
-      const staticData: Record<SiteSection, { title: string; desc?: string; image?: string; url?: string }[]> = {
-        servicos,
-        imoveis,
-        cursos,
-        marketplace,
-        vocesabia,
-        links: linksUteis.map((l) => ({ title: l.label, url: l.href })),
-      };
-      const seen = new Set<string>();
-      const rows = staticData[section].map((it, i) => {
-        let slug: string | null = cfg.hasSlug ? slugify(it.title) : null;
-        if (slug) {
-          const base = slug;
-          let n = 2;
-          while (seen.has(slug)) slug = `${base}-${n++}`;
-          seen.add(slug);
-        }
-        return {
-          section,
-          title: it.title,
-          slug,
-          description: it.desc ?? null,
-          image: it.image ?? null,
-          link_url: it.url ?? null,
-          sort_order: i,
-        };
-      });
-      const { error } = await supabase.from('site_items').insert(rows);
-      if (error) throw error;
-      return rows.length;
+    mutationFn: async (targets: SiteSection[]) => {
+      let total = 0;
+      for (const key of targets) {
+        const rows = buildRows(key);
+        if (!rows.length) continue;
+        const { error } = await supabase.from('site_items').insert(rows);
+        if (error) throw error;
+        total += rows.length;
+      }
+      return total;
     },
     onSuccess: (n) => {
-      toast({ title: `${n} itens importados` });
-      invalidate();
+      if (n > 0) toast({ title: `${n} itens importados para o editor` });
+      SECTIONS.forEach((s) => {
+        qc.invalidateQueries({ queryKey: ['admin-site-items', s.key] });
+        qc.invalidateQueries({ queryKey: ['site-items', s.key] });
+      });
+      qc.invalidateQueries({ queryKey: ['admin-site-counts'] });
     },
     onError: (e: Error) => toast({ title: 'Erro ao importar', description: e.message, variant: 'destructive' }),
   });
+
+  // Sincroniza automaticamente as seções que ainda não têm conteúdo no banco,
+  // para o editor já abrir com todo o conteúdo atual do site.
+  const autoSynced = useRef(false);
+  useEffect(() => {
+    if (countsLoading || autoSynced.current || importMutation.isPending) return;
+    const missing = SECTIONS.filter((s) => !counts[s.key]).map((s) => s.key);
+    if (missing.length === 0) {
+      autoSynced.current = true;
+      return;
+    }
+    autoSynced.current = true;
+    importMutation.mutate(missing);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countsLoading, counts]);
 
   const move = (index: number, dir: -1 | 1) => {
     const target = items[index + dir];
