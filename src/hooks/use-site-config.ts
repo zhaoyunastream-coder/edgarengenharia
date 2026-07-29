@@ -181,7 +181,13 @@ export async function saveSiteConfig(config: SiteConfig) {
   const { error } = await supabase
     .from('site_settings')
     .upsert(
-      { key: 'home_design', value: config as unknown as Record<string, unknown>, updated_at: new Date().toISOString() },
+      [
+        {
+          key: 'home_design',
+          value: config as unknown as Record<string, unknown>,
+          updated_at: new Date().toISOString(),
+        },
+      ],
       { onConflict: 'key' },
     );
   if (error) throw error;
