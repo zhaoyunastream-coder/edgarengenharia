@@ -59,21 +59,35 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading tracking-wide;
+    @apply font-heading;
+  }
+
+  html, body {
+    @apply overflow-x-hidden;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-amber-400;
+    @apply text-primary;
   }
 
   .glow-amber {
-    box-shadow: 0 0 20px hsl(38 92% 50% / 0.15), 0 0 60px hsl(38 92% 50% / 0.05);
+    box-shadow: 0 2px 12px hsl(0 0% 0% / 0.08);
   }
 
   .glow-amber-hover {
-    box-shadow: 0 0 30px hsl(38 92% 50% / 0.25), 0 0 80px hsl(38 92% 50% / 0.1);
+    box-shadow: 0 6px 20px hsl(0 0% 0% / 0.12);
+  }
+
+  .card-ref {
+    @apply bg-card border border-border rounded-[3px] transition-all duration-300;
+    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.06);
+  }
+
+  .card-ref:hover {
+    border-bottom-color: hsl(var(--primary));
+    box-shadow: 0 6px 18px hsl(0 0% 0% / 0.1);
   }
 
   .blueprint-grid {
