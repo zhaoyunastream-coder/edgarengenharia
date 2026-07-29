@@ -4,16 +4,21 @@ import { heroImage } from '@/data/site-content';
 interface HeroProps {
   title?: string;
   subtitle?: string;
+  image?: string;
 }
 
-export default function HeroSection({ title = 'Edgar Alexandre Kmiecik', subtitle = 'Engenheiro Civil' }: HeroProps) {
+export default function HeroSection({
+  title = 'Edgar Alexandre Kmiecik',
+  subtitle = 'Engenheiro Civil',
+  image,
+}: HeroProps) {
   return (
     <section
       id="inicio"
       className="relative min-h-[85vh] md:min-h-screen flex items-end justify-center overflow-hidden"
     >
       <img
-        src={heroImage}
+        src={image || heroImage}
         alt="Engenheiro analisando planta de loteamento sobre a mesa"
         width={1920}
         height={1280}

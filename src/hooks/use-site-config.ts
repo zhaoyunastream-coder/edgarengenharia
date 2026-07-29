@@ -47,6 +47,7 @@ export interface SiteTheme {
   radius: number;
   font: string;
   heroOverlay: number;
+  heroImage: string;
 }
 
 export interface SectionText {
@@ -68,6 +69,7 @@ export const DEFAULT_THEME: SiteTheme = {
   radius: 4,
   font: 'Open Sans',
   heroOverlay: 35,
+  heroImage: '',
 };
 
 export const FONT_OPTIONS = ['Open Sans', 'Inter', 'Montserrat', 'Poppins', 'Roboto', 'Lato', 'Raleway'];

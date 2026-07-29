@@ -20,7 +20,14 @@ const Index = () => {
     const title = textOf(config, id);
     switch (id) {
       case 'hero':
-        return <HeroSection key={id} title={title} subtitle={textOf(config, 'hero', 'subtitle')} />;
+        return (
+          <HeroSection
+            key={id}
+            title={title}
+            subtitle={textOf(config, 'hero', 'subtitle')}
+            image={config.theme.heroImage || undefined}
+          />
+        );
       case 'servicos':
         return <ServicesSection key={id} title={title} />;
       case 'imoveis':
