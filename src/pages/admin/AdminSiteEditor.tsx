@@ -1,13 +1,15 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowDown,
   ArrowUp,
+  ExternalLink,
   Eye,
   EyeOff,
   ImagePlus,
   Loader2,
   Plus,
+  RefreshCw,
   Save,
   Trash2,
   X,
@@ -38,6 +40,38 @@ const MAX_SIZE = 5 * 1024 * 1024;
 
 type Draft = Partial<SiteItem> & { section: SiteSection };
 
+const STATIC_DATA: Record<SiteSection, { title: string; desc?: string; image?: string; url?: string }[]> = {
+  servicos,
+  imoveis,
+  cursos,
+  marketplace,
+  vocesabia,
+  links: linksUteis.map((l) => ({ title: l.label, url: l.href })),
+};
+
+function buildRows(sectionKey: SiteSection) {
+  const hasSlug = SECTIONS.find((s) => s.key === sectionKey)!.hasSlug;
+  const seen = new Set<string>();
+  return STATIC_DATA[sectionKey].map((it, i) => {
+    let slug: string | null = hasSlug ? slugify(it.title) : null;
+    if (slug) {
+      const base = slug;
+      let n = 2;
+      while (seen.has(slug)) slug = `${base}-${n++}`;
+      seen.add(slug);
+    }
+    return {
+      section: sectionKey,
+      title: it.title,
+      slug,
+      description: it.desc ?? null,
+      image: it.image ?? null,
+      link_url: it.url ?? null,
+      sort_order: i,
+    };
+  });
+}
+
 async function uploadBlob(blob: Blob, folder: string) {
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
   const { error } = await supabase.storage.from('blog-images').upload(path, blob, {
@@ -59,6 +93,19 @@ export default function AdminSiteEditor() {
 
   const cfg = SECTIONS.find((s) => s.key === section)!;
 
+  const { data: counts = {} as Record<string, number>, isLoading: countsLoading } = useQuery({
+    queryKey: ['admin-site-counts'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('site_items').select('section');
+      if (error) throw error;
+      const map: Record<string, number> = {};
+      (data ?? []).forEach((r) => {
+        map[r.section as string] = (map[r.section as string] ?? 0) + 1;
+      });
+      return map;
+    },
+  });
+
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['admin-site-items', section],
     queryFn: async () => {
@@ -75,6 +122,7 @@ export default function AdminSiteEditor() {
   const invalidate = () => {
     qc.invalidateQueries({ queryKey: ['admin-site-items', section] });
     qc.invalidateQueries({ queryKey: ['site-items', section] });
+    qc.invalidateQueries({ queryKey: ['admin-site-counts'] });
   };
 
   const saveMutation = useMutation({
@@ -129,44 +177,42 @@ export default function AdminSiteEditor() {
   });
 
   const importMutation = useMutation({
-    mutationFn: async () => {
-      const staticData: Record<SiteSection, { title: string; desc?: string; image?: string; url?: string }[]> = {
-        servicos,
-        imoveis,
-        cursos,
-        marketplace,
-        vocesabia,
-        links: linksUteis.map((l) => ({ title: l.label, url: l.href })),
-      };
-      const seen = new Set<string>();
-      const rows = staticData[section].map((it, i) => {
-        let slug: string | null = cfg.hasSlug ? slugify(it.title) : null;
-        if (slug) {
-          const base = slug;
-          let n = 2;
-          while (seen.has(slug)) slug = `${base}-${n++}`;
-          seen.add(slug);
-        }
-        return {
-          section,
-          title: it.title,
-          slug,
-          description: it.desc ?? null,
-          image: it.image ?? null,
-          link_url: it.url ?? null,
-          sort_order: i,
-        };
-      });
-      const { error } = await supabase.from('site_items').insert(rows);
-      if (error) throw error;
-      return rows.length;
+    mutationFn: async (targets: SiteSection[]) => {
+      let total = 0;
+      for (const key of targets) {
+        const rows = buildRows(key);
+        if (!rows.length) continue;
+        const { error } = await supabase.from('site_items').insert(rows);
+        if (error) throw error;
+        total += rows.length;
+      }
+      return total;
     },
     onSuccess: (n) => {
-      toast({ title: `${n} itens importados` });
-      invalidate();
+      if (n > 0) toast({ title: `${n} itens importados para o editor` });
+      SECTIONS.forEach((s) => {
+        qc.invalidateQueries({ queryKey: ['admin-site-items', s.key] });
+        qc.invalidateQueries({ queryKey: ['site-items', s.key] });
+      });
+      qc.invalidateQueries({ queryKey: ['admin-site-counts'] });
     },
     onError: (e: Error) => toast({ title: 'Erro ao importar', description: e.message, variant: 'destructive' }),
   });
+
+  // Sincroniza automaticamente as seções que ainda não têm conteúdo no banco,
+  // para o editor já abrir com todo o conteúdo atual do site.
+  const autoSynced = useRef(false);
+  useEffect(() => {
+    if (countsLoading || autoSynced.current || importMutation.isPending) return;
+    const missing = SECTIONS.filter((s) => !counts[s.key]).map((s) => s.key);
+    if (missing.length === 0) {
+      autoSynced.current = true;
+      return;
+    }
+    autoSynced.current = true;
+    importMutation.mutate(missing);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countsLoading, counts]);
 
   const move = (index: number, dir: -1 | 1) => {
     const target = items[index + dir];
@@ -229,12 +275,35 @@ export default function AdminSiteEditor() {
             Gerencie o conteúdo das seções da página inicial.
           </p>
         </div>
-        <button
-          onClick={() => setDraft(emptyDraft)}
-          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:brightness-95"
-        >
-          <Plus className="w-4 h-4" /> Novo item
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="/"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
+          >
+            <ExternalLink className="w-4 h-4" /> Ver site
+          </a>
+          <button
+            onClick={() => importMutation.mutate([section])}
+            disabled={importMutation.isPending}
+            className="inline-flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-muted disabled:opacity-60"
+            title="Recarrega o conteúdo padrão desta seção (adiciona aos itens existentes)"
+          >
+            {importMutation.isPending ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4" />
+            )}
+            Importar padrão
+          </button>
+          <button
+            onClick={() => setDraft(emptyDraft)}
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:brightness-95"
+          >
+            <Plus className="w-4 h-4" /> Novo item
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -249,11 +318,14 @@ export default function AdminSiteEditor() {
             }`}
           >
             {s.label}
+            {counts[s.key] ? (
+              <span className="ml-2 text-xs opacity-70">{counts[s.key]}</span>
+            ) : null}
           </button>
         ))}
       </div>
 
-      {isLoading ? (
+      {isLoading || importMutation.isPending ? (
         <div className="flex justify-center py-12">
           <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
@@ -263,7 +335,7 @@ export default function AdminSiteEditor() {
             Nenhum item cadastrado nesta seção. O site está exibindo o conteúdo padrão.
           </p>
           <button
-            onClick={() => importMutation.mutate()}
+            onClick={() => importMutation.mutate([section])}
             disabled={importMutation.isPending}
             className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-medium disabled:opacity-60"
           >
@@ -294,6 +366,17 @@ export default function AdminSiteEditor() {
                 </p>
               </div>
               <div className="flex items-center gap-1 shrink-0">
+                {cfg.hasPage && item.slug && (
+                  <a
+                    href={`/${section}/${item.slug}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 rounded-lg hover:bg-muted text-muted-foreground"
+                    aria-label="Ver página"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
                 <button
                   onClick={() => move(i, -1)}
                   disabled={i === 0}
