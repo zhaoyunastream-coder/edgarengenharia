@@ -2,11 +2,11 @@ import { motion } from 'framer-motion';
 import SectionHeading from './SectionHeading';
 import { sobreImage, sobreTexto, contato } from '@/data/site-content';
 
-export default function AboutSection() {
+export default function AboutSection({ title = "Sobre" }: { title?: string }) {
   return (
     <section id="sobre" className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
-        <SectionHeading title="Sobre" />
+        <SectionHeading title={title} />
 
         <motion.div
           initial={{ opacity: 0, y: 24 }}

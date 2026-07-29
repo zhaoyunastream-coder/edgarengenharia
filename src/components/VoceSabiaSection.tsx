@@ -5,14 +5,14 @@ import SectionHeading from './SectionHeading';
 import { vocesabia } from '@/data/site-content';
 import { useSiteSection } from '@/hooks/use-site-items';
 
-export default function VoceSabiaSection() {
+export default function VoceSabiaSection({ title = "Você sabia ???" }: { title?: string }) {
   const { items } = useSiteSection('vocesabia', vocesabia);
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <section id="voce-sabia" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        <SectionHeading title="Você sabia ???" />
+        <SectionHeading title={title} />
 
         <div className="max-w-4xl mx-auto space-y-4">
           {items.map((item, i) => {

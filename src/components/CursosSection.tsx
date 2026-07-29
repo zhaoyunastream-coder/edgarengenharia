@@ -7,7 +7,7 @@ import { useSiteSection } from '@/hooks/use-site-items';
 
 const STEP = 12;
 
-export default function CursosSection() {
+export default function CursosSection({ title = "Cursos" }: { title?: string }) {
   const { items } = useSiteSection('cursos', cursos);
   const [visible, setVisible] = useState(STEP);
   const shown = items.slice(0, visible);
@@ -15,7 +15,7 @@ export default function CursosSection() {
   return (
     <section id="cursos" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        <SectionHeading title="Cursos" />
+        <SectionHeading title={title} />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {shown.map((item, i) => (

@@ -4,13 +4,13 @@ import SectionHeading from './SectionHeading';
 import { marketplace } from '@/data/site-content';
 import { useSiteSection } from '@/hooks/use-site-items';
 
-export default function MarketplaceSection() {
+export default function MarketplaceSection({ title = "Marketplace" }: { title?: string }) {
   const { items } = useSiteSection('marketplace', marketplace);
 
   return (
     <section id="marketplace" className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
-        <SectionHeading title="Marketplace" />
+        <SectionHeading title={title} />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((item) => (

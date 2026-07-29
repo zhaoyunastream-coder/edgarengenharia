@@ -1,3 +1,4 @@
+import { trackEvent } from '@/lib/site-analytics';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -43,7 +44,7 @@ const info = [
   { icon: Clock, label: 'Horário', value: contato.horario },
 ];
 
-export default function ContactCTASection() {
+export default function ContactCTASection({ title = "Contato" }: { title?: string }) {
   const [submitting, setSubmitting] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactForm>({
@@ -63,6 +64,7 @@ export default function ContactCTASection() {
     supabase.functions.invoke('send-contact-email', { body: data }).catch(console.error);
 
     setSubmitting(false);
+    trackEvent('conversion_formulario');
     if (window.gtag) window.gtag('event', 'conversion_formulario', { event_category: 'contato', event_label: 'formulario_orcamento' });
     toast({ title: 'Mensagem enviada!', description: 'Retornaremos em breve.' });
     reset();
@@ -75,7 +77,7 @@ export default function ContactCTASection() {
   return (
     <section id="contato" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        <SectionHeading title="Contato" />
+        <SectionHeading title={title} />
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
           {/* Info */}

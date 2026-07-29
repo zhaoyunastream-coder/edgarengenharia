@@ -95,6 +95,45 @@ export type Database = {
         }
         Relationships: []
       }
+      site_analytics_events: {
+        Row: {
+          created_at: string
+          device: string | null
+          event_name: string | null
+          id: string
+          page_title: string | null
+          path: string
+          referrer: string | null
+          session_id: string | null
+          source: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          device?: string | null
+          event_name?: string | null
+          id?: string
+          page_title?: string | null
+          path?: string
+          referrer?: string | null
+          session_id?: string | null
+          source?: string
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          device?: string | null
+          event_name?: string | null
+          id?: string
+          page_title?: string | null
+          path?: string
+          referrer?: string | null
+          session_id?: string | null
+          source?: string
+          type?: string
+        }
+        Relationships: []
+      }
       site_items: {
         Row: {
           created_at: string
