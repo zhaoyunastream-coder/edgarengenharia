@@ -216,7 +216,18 @@ export default function SiteAppearanceEditor() {
             {PALETTES.map((p) => (
               <button
                 key={p.label}
-                onClick={() => patch((c) => ({ ...c, theme: { ...c.theme, ...p, label: undefined } as typeof c.theme }))}
+                onClick={() =>
+                  patch((c) => ({
+                    ...c,
+                    theme: {
+                      ...c.theme,
+                      primary: p.primary,
+                      background: p.background,
+                      foreground: p.foreground,
+                      muted: p.muted,
+                    },
+                  }))
+                }
                 className="flex items-center gap-2 border border-border rounded-lg px-2.5 py-1.5 text-xs hover:bg-muted"
               >
                 <span className="w-3.5 h-3.5 rounded-full" style={{ background: p.primary }} />

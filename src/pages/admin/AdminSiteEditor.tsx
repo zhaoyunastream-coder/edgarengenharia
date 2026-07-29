@@ -17,6 +17,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import ImageCropModal from '@/components/admin/ImageCropModal';
+import SiteAppearanceEditor from './SiteAppearanceEditor';
 import { normalizeItem, slugify, type SiteItem, type SiteSection } from '@/hooks/use-site-items';
 import {
   cursos,
@@ -84,6 +85,7 @@ async function uploadBlob(blob: Blob, folder: string) {
 
 export default function AdminSiteEditor() {
   const qc = useQueryClient();
+  const [mode, setMode] = useState<'visual' | 'conteudo'>('visual');
   const [section, setSection] = useState<SiteSection>('imoveis');
   const [draft, setDraft] = useState<Draft | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
@@ -266,6 +268,52 @@ export default function AdminSiteEditor() {
     [section, items.length],
   );
 
+  const modeTabs = (
+    <div className="inline-flex rounded-lg border border-border overflow-hidden">
+      {([
+        ['visual', 'Aparência & Layout'],
+        ['conteudo', 'Conteúdo das seções'],
+      ] as const).map(([key, label]) => (
+        <button
+          key={key}
+          onClick={() => setMode(key)}
+          className={`px-4 py-2 text-sm font-medium transition-colors ${
+            mode === key ? 'bg-primary text-primary-foreground' : 'bg-card text-muted-foreground hover:bg-muted'
+          }`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (mode === 'visual') {
+    return (
+      <div className="space-y-6">
+        <div className="bg-card border border-border rounded-xl p-6 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="font-heading text-2xl md:text-3xl">Editor do Site</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Veja o site como o visitante vê e edite ordem das seções, textos e cores.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {modeTabs}
+            <a
+              href="/"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
+            >
+              <ExternalLink className="w-4 h-4" /> Ver site
+            </a>
+          </div>
+        </div>
+        <SiteAppearanceEditor />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="bg-card border border-border rounded-xl p-6 flex flex-wrap items-center justify-between gap-4">
@@ -276,6 +324,7 @@ export default function AdminSiteEditor() {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {modeTabs}
           <a
             href="/"
             target="_blank"
