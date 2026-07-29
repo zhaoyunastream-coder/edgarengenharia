@@ -1,6 +1,8 @@
+import { useQuery } from '@tanstack/react-query';
 import { ArrowUpRight, Facebook, Globe, Instagram, Building2 } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import { linksUteis } from '@/data/site-content';
+import { supabase } from '@/integrations/supabase/client';
 
 function metaFor(label: string, href: string) {
   const host = (() => {
@@ -18,13 +20,32 @@ function metaFor(label: string, href: string) {
 }
 
 export default function LinksUteisSection() {
+  const { data } = useQuery({
+    queryKey: ['site-items', 'links'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('site_items')
+        .select('title, link_url')
+        .eq('section', 'links')
+        .eq('published', true)
+        .order('sort_order', { ascending: true });
+      if (error) throw error;
+      return (data ?? [])
+        .filter((r) => !!r.link_url)
+        .map((r) => ({ label: r.title as string, href: r.link_url as string }));
+    },
+    staleTime: 60_000,
+  });
+
+  const links = data && data.length > 0 ? data : linksUteis;
+
   return (
     <section id="links-uteis" className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
         <SectionHeading title="Links Úteis" />
 
         <ul className="max-w-4xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {linksUteis.map((l) => {
+          {links.map((l) => {
             const { Icon, title, sub } = metaFor(l.label, l.href);
             return (
               <li key={l.href}>

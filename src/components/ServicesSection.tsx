@@ -1,17 +1,20 @@
 import { motion } from 'framer-motion';
 import SectionHeading from './SectionHeading';
 import { servicos } from '@/data/site-content';
+import { useSiteSection } from '@/hooks/use-site-items';
 
 export default function ServicesSection() {
+  const { items } = useSiteSection('servicos', servicos);
+
   return (
     <section id="servicos" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <SectionHeading title="Serviços" />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {servicos.map((service, i) => (
+          {items.map((service, i) => (
             <motion.article
-              key={service.title}
+              key={service.id}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
@@ -31,7 +34,7 @@ export default function ServicesSection() {
               <div className="p-6 text-left">
                 <h3 className="text-xl font-bold text-foreground mb-3">{service.title}</h3>
                 <p className="text-[15px] text-foreground/80 leading-relaxed whitespace-pre-line">
-                  {service.desc}
+                  {service.description}
                 </p>
               </div>
             </motion.article>
