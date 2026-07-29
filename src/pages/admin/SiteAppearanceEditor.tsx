@@ -253,6 +253,50 @@ export default function SiteAppearanceEditor() {
         </div>
 
         {/* Cores e tipografia */}
+        <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+          <h2 className="font-heading text-lg flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-primary" /> Foto da capa (Início)
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            Envie uma foto (JPG/PNG/WebP, até 8MB). Você recorta em 16:9 antes de publicar.
+          </p>
+          <div className="relative group rounded-lg overflow-hidden border border-border">
+            <img
+              src={draft.theme.heroImage || defaultHeroImage}
+              alt="Foto atual da capa do site"
+              className="w-full aspect-video object-cover"
+            />
+            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              <button
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-2 rounded-lg text-xs font-medium"
+              >
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                Trocar foto
+              </button>
+              {draft.theme.heroImage && (
+                <button
+                  onClick={() => patch((c) => ({ ...c, theme: { ...c.theme, heroImage: '' } }))}
+                  className="inline-flex items-center gap-2 bg-background text-foreground px-3 py-2 rounded-lg text-xs font-medium"
+                >
+                  <Trash2 className="w-4 h-4" /> Restaurar padrão
+                </button>
+              )}
+            </div>
+          </div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              onPickFile(e.target.files?.[0]);
+              e.target.value = '';
+            }}
+          />
+        </div>
+
         <div className="bg-card border border-border rounded-xl p-5 space-y-5">
           <h2 className="font-heading text-lg flex items-center gap-2">
             <Palette className="w-4 h-4 text-primary" /> Cores e estilo
@@ -381,6 +425,15 @@ export default function SiteAppearanceEditor() {
           />
         </div>
       </div>
+
+      {cropFile && (
+        <ImageCropModal
+          file={cropFile}
+          maxWidth={1920}
+          onConfirm={onCropConfirm}
+          onCancel={() => setCropFile(null)}
+        />
+      )}
     </div>
   );
 }
