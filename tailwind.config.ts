@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['"Bebas Neue"', 'sans-serif'],
-        body: ['"DM Sans"', 'sans-serif'],
+        heading: ['"Open Sans"', 'Arial', 'sans-serif'],
+        body: ['"Open Sans"', 'Arial', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
