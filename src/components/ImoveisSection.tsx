@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SectionHeading from './SectionHeading';
 import { imoveis } from '@/data/site-content';
