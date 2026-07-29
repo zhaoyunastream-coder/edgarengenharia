@@ -1,76 +1,37 @@
 import { motion } from 'framer-motion';
-import { useScrollReveal } from '@/hooks/use-scroll-reveal';
-import { GraduationCap, Calendar } from 'lucide-react';
-import edgarPhoto from '@/assets/edgar-photo.png';
-
-const education = [
-  { year: '2004', title: 'Ciências Contábeis — UPF' },
-  { year: '2009', title: 'Pós em Gestão de Pessoas' },
-  { year: '2011', title: 'Técnico em Transações Imobiliárias' },
-  { year: '2012', title: 'Avaliação de Imóveis' },
-  { year: '2019', title: 'Engenharia Civil — Ulbra' },
-  { year: '2021', title: 'Pós em Eng. e Segurança do Trabalho' },
-  { year: '2022', title: 'Pós em Estruturas de Concreto Armado' },
-];
-
-
+import SectionHeading from './SectionHeading';
+import { sobreImage, sobreTexto, contato } from '@/data/site-content';
 
 export default function AboutSection() {
-  const { ref, controls, variants } = useScrollReveal();
-
   return (
-    <section id="sobre" className="py-24 relative">
+    <section id="sobre" className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
-        <motion.div ref={ref} initial="hidden" animate={controls} variants={variants}>
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
-            {/* Image Side */}
-            <div className="relative">
-              <div className="aspect-[4/5] bg-card rounded-lg border border-border overflow-hidden relative">
-                <img src={edgarPhoto} alt="Edgar Alexandre Kmiecik" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent" />
-              </div>
-              <div className="absolute -bottom-4 -right-4 bg-primary text-primary-foreground px-4 py-2 rounded-md font-semibold text-sm flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                Desde 2011
-              </div>
-            </div>
+        <SectionHeading title="Sobre" />
 
-            {/* Text Side */}
-            <div>
-              <p className="text-primary font-semibold text-sm tracking-widest uppercase mb-2">Sobre</p>
-              <h2 className="text-4xl md:text-5xl font-heading mb-6">
-                Edgar Alexandre<br />
-                <span className="text-gradient">Kmiecik</span>
-              </h2>
-              <p className="text-muted-foreground leading-relaxed mb-8">
-                Sou Edgar Alexandre Kmiecik, de Carazinho/RS. Graduado em Ciências Contábeis pela UPF (2004),
-                com Pós-Graduação em Gestão de Pessoas (2009). Técnico em Transações Imobiliárias (2011)
-                e Avaliação de Imóveis (2012). Engenheiro Civil pela Ulbra (2019), com Pós-Graduação em
-                Engenharia e Segurança do Trabalho (2021) e Estruturas de Concreto Armado (2022). Desde 2011
-                trabalho com imóveis — da venda à execução de obras de pequeno e grande porte. Me dedico ao
-                conhecimento contínuo para oferecer o melhor serviço, com preço justo e sem complicações para você.
-              </p>
-
-              {/* Education Timeline */}
-              <div className="mb-8">
-                <h3 className="font-heading text-2xl mb-4 flex items-center gap-2">
-                  <GraduationCap className="w-5 h-5 text-primary" />
-                  Formação
-                </h3>
-                <div className="space-y-3">
-                  {education.map((item) => (
-                    <div key={item.year + item.title} className="flex items-center gap-3">
-                      <span className="text-xs font-mono bg-primary/10 text-primary px-2 py-1 rounded shrink-0">
-                        {item.year}
-                      </span>
-                      <span className="text-sm text-muted-foreground">{item.title}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-          </div>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: 0.45 }}
+          className="max-w-4xl mx-auto text-center"
+        >
+          <img
+            src={sobreImage}
+            alt="Edgar Alexandre Kmiecik, Engenheiro Civil"
+            width={600}
+            height={600}
+            loading="lazy"
+            className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover mx-auto mb-8 shadow-md"
+          />
+          <p className="text-[15px] md:text-base text-foreground/80 leading-[1.9] text-justify">
+            {sobreTexto}
+          </p>
+          <p className="mt-6 text-base font-semibold text-foreground">
+            Entre em contato, que terei o maior prazer em lhe atender.
+          </p>
+          <p className="mt-4 text-sm text-muted-foreground">
+            {contato.crea} &nbsp;|&nbsp; {contato.creci}
+          </p>
         </motion.div>
       </div>
     </section>

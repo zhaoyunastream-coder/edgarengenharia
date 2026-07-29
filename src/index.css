@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,44 +6,46 @@
 
 @layer base {
   :root {
-    --background: 220 20% 4%;
-    --foreground: 213 31% 95%;
+    /* Paleta clara inspirada no site oficial engenheiroedgar.com */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 14.5%;
 
-    --card: 225 18% 8%;
-    --card-foreground: 213 31% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 14.5%;
 
-    --popover: 225 18% 8%;
-    --popover-foreground: 213 31% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 14.5%;
 
-    --primary: 38 92% 50%;
-    --primary-foreground: 220 20% 4%;
+    /* Turquesa do site de referência (#2CCFD8) */
+    --primary: 183 68% 51%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 91% 60%;
-    --secondary-foreground: 213 31% 95%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 14.5%;
 
-    --muted: 220 15% 12%;
-    --muted-foreground: 215 17% 63%;
+    --muted: 0 0% 96.5%;
+    --muted-foreground: 0 0% 41%;
 
-    --accent: 38 92% 50%;
-    --accent-foreground: 220 20% 4%;
+    --accent: 183 68% 51%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 16%;
-    --input: 220 15% 16%;
-    --ring: 38 92% 50%;
+    --border: 0 0% 89%;
+    --input: 0 0% 85%;
+    --ring: 183 68% 51%;
 
-    --radius: 0.5rem;
+    --radius: 0.25rem;
 
-    --sidebar-background: 220 20% 4%;
-    --sidebar-foreground: 213 31% 95%;
-    --sidebar-primary: 38 92% 50%;
-    --sidebar-primary-foreground: 220 20% 4%;
-    --sidebar-accent: 220 15% 12%;
-    --sidebar-accent-foreground: 213 31% 95%;
-    --sidebar-border: 220 15% 16%;
-    --sidebar-ring: 38 92% 50%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 14.5%;
+    --sidebar-primary: 183 68% 51%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96.5%;
+    --sidebar-accent-foreground: 0 0% 14.5%;
+    --sidebar-border: 0 0% 89%;
+    --sidebar-ring: 183 68% 51%;
   }
 }
 
@@ -57,21 +59,35 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading tracking-wide;
+    @apply font-heading;
+  }
+
+  html, body {
+    @apply overflow-x-hidden;
   }
 }
 
 @layer utilities {
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-amber-400;
+    @apply text-primary;
   }
 
   .glow-amber {
-    box-shadow: 0 0 20px hsl(38 92% 50% / 0.15), 0 0 60px hsl(38 92% 50% / 0.05);
+    box-shadow: 0 2px 12px hsl(0 0% 0% / 0.08);
   }
 
   .glow-amber-hover {
-    box-shadow: 0 0 30px hsl(38 92% 50% / 0.25), 0 0 80px hsl(38 92% 50% / 0.1);
+    box-shadow: 0 6px 20px hsl(0 0% 0% / 0.12);
+  }
+
+  .card-ref {
+    @apply bg-card border border-border rounded-[3px] transition-all duration-300;
+    box-shadow: 0 1px 3px hsl(0 0% 0% / 0.06);
+  }
+
+  .card-ref:hover {
+    border-bottom-color: hsl(var(--primary));
+    box-shadow: 0 6px 18px hsl(0 0% 0% / 0.1);
   }
 
   .blueprint-grid {
@@ -101,12 +117,12 @@ html {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: hsl(220 20% 4%);
+  background: hsl(0 0% 96%);
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(220 15% 16%);
+  background: hsl(0 0% 80%);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(38 92% 50% / 0.5);
+  background: hsl(183 68% 51%);
 }
