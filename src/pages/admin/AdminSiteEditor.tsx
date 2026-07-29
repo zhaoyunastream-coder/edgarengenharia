@@ -1,13 +1,15 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowDown,
   ArrowUp,
+  ExternalLink,
   Eye,
   EyeOff,
   ImagePlus,
   Loader2,
   Plus,
+  RefreshCw,
   Save,
   Trash2,
   X,
@@ -37,6 +39,38 @@ const SECTIONS: { key: SiteSection; label: string; hasSlug: boolean; hasPage: bo
 const MAX_SIZE = 5 * 1024 * 1024;
 
 type Draft = Partial<SiteItem> & { section: SiteSection };
+
+const STATIC_DATA: Record<SiteSection, { title: string; desc?: string; image?: string; url?: string }[]> = {
+  servicos,
+  imoveis,
+  cursos,
+  marketplace,
+  vocesabia,
+  links: linksUteis.map((l) => ({ title: l.label, url: l.href })),
+};
+
+function buildRows(sectionKey: SiteSection) {
+  const hasSlug = SECTIONS.find((s) => s.key === sectionKey)!.hasSlug;
+  const seen = new Set<string>();
+  return STATIC_DATA[sectionKey].map((it, i) => {
+    let slug: string | null = hasSlug ? slugify(it.title) : null;
+    if (slug) {
+      const base = slug;
+      let n = 2;
+      while (seen.has(slug)) slug = `${base}-${n++}`;
+      seen.add(slug);
+    }
+    return {
+      section: sectionKey,
+      title: it.title,
+      slug,
+      description: it.desc ?? null,
+      image: it.image ?? null,
+      link_url: it.url ?? null,
+      sort_order: i,
+    };
+  });
+}
 
 async function uploadBlob(blob: Blob, folder: string) {
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
