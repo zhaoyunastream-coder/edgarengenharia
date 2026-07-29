@@ -366,6 +366,17 @@ export default function AdminSiteEditor() {
                 </p>
               </div>
               <div className="flex items-center gap-1 shrink-0">
+                {cfg.hasPage && item.slug && (
+                  <a
+                    href={`/${section}/${item.slug}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="p-2 rounded-lg hover:bg-muted text-muted-foreground"
+                    aria-label="Ver página"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
                 <button
                   onClick={() => move(i, -1)}
                   disabled={i === 0}
