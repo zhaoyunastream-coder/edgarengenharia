@@ -275,12 +275,35 @@ export default function AdminSiteEditor() {
             Gerencie o conteúdo das seções da página inicial.
           </p>
         </div>
-        <button
-          onClick={() => setDraft(emptyDraft)}
-          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:brightness-95"
-        >
-          <Plus className="w-4 h-4" /> Novo item
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="/"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-muted"
+          >
+            <ExternalLink className="w-4 h-4" /> Ver site
+          </a>
+          <button
+            onClick={() => importMutation.mutate([section])}
+            disabled={importMutation.isPending}
+            className="inline-flex items-center gap-2 border border-border px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-muted disabled:opacity-60"
+            title="Recarrega o conteúdo padrão desta seção (adiciona aos itens existentes)"
+          >
+            {importMutation.isPending ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4" />
+            )}
+            Importar padrão
+          </button>
+          <button
+            onClick={() => setDraft(emptyDraft)}
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg text-sm font-medium hover:brightness-95"
+          >
+            <Plus className="w-4 h-4" /> Novo item
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -295,11 +318,14 @@ export default function AdminSiteEditor() {
             }`}
           >
             {s.label}
+            {counts[s.key] ? (
+              <span className="ml-2 text-xs opacity-70">{counts[s.key]}</span>
+            ) : null}
           </button>
         ))}
       </div>
 
-      {isLoading ? (
+      {isLoading || importMutation.isPending ? (
         <div className="flex justify-center py-12">
           <Loader2 className="w-6 h-6 animate-spin text-primary" />
         </div>
@@ -309,7 +335,7 @@ export default function AdminSiteEditor() {
             Nenhum item cadastrado nesta seção. O site está exibindo o conteúdo padrão.
           </p>
           <button
-            onClick={() => importMutation.mutate()}
+            onClick={() => importMutation.mutate([section])}
             disabled={importMutation.isPending}
             className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-lg text-sm font-medium disabled:opacity-60"
           >
