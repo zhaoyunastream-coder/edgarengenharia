@@ -1,3 +1,4 @@
+import { trackEvent } from '@/lib/site-analytics';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -63,6 +64,7 @@ export default function ContactCTASection({ title = "Contato" }: { title?: strin
     supabase.functions.invoke('send-contact-email', { body: data }).catch(console.error);
 
     setSubmitting(false);
+    trackEvent('conversion_formulario');
     if (window.gtag) window.gtag('event', 'conversion_formulario', { event_category: 'contato', event_label: 'formulario_orcamento' });
     toast({ title: 'Mensagem enviada!', description: 'Retornaremos em breve.' });
     reset();

@@ -17,6 +17,7 @@ import AdminContacts from "./pages/admin/AdminContacts";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSiteEditor from "./pages/admin/AdminSiteEditor";
 import SiteItemDetailPage from "./pages/SiteItemDetailPage";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
       <Toaster />
       <AuthProvider>
         <BrowserRouter>
+          <AnalyticsTracker />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/blog" element={<BlogPage />} />
