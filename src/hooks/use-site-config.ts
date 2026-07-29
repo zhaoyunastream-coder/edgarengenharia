@@ -184,7 +184,7 @@ export async function saveSiteConfig(config: SiteConfig) {
       [
         {
           key: 'home_design',
-          value: config as unknown as Record<string, unknown>,
+          value: JSON.parse(JSON.stringify(config)),
           updated_at: new Date().toISOString(),
         },
       ],
