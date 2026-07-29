@@ -4,15 +4,21 @@ import {
   Eye,
   EyeOff,
   GripVertical,
+  ImageIcon,
   Loader2,
   Monitor,
   Palette,
   RotateCcw,
   Save,
   Smartphone,
+  Trash2,
+  Upload,
   Type as TypeIcon,
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import ImageCropModal from '@/components/admin/ImageCropModal';
+import { heroImage as defaultHeroImage } from '@/data/site-content';
 import {
   DEFAULT_CONFIG,
   FONT_OPTIONS,
@@ -39,13 +45,26 @@ const PALETTES = [
   { label: 'Grafite & âmbar', primary: '#E8A33D', background: '#FFFFFF', foreground: '#22252A', muted: '#F5F5F4' },
 ];
 
+async function uploadHeroBlob(blob: Blob) {
+  const path = `site/hero-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
+  const { error } = await supabase.storage.from('blog-images').upload(path, blob, {
+    contentType: 'image/webp',
+    upsert: false,
+  });
+  if (error) throw error;
+  return supabase.storage.from('blog-images').getPublicUrl(path).data.publicUrl;
+}
+
 export default function SiteAppearanceEditor() {
   const qc = useQueryClient();
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [draft, setDraft] = useState<SiteConfig | null>(null);
   const [ready, setReady] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [cropFile, setCropFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   const { data, isLoading } = useQuery({ queryKey: ['site-config'], queryFn: fetchSiteConfig });
 
@@ -84,6 +103,33 @@ export default function SiteAppearanceEditor() {
   });
 
   const patch = (fn: (c: SiteConfig) => SiteConfig) => setDraft((c) => (c ? fn(c) : c));
+
+  const onPickFile = (file?: File | null) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast({ title: 'Arquivo inválido', description: 'Selecione uma imagem.', variant: 'destructive' });
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      toast({ title: 'Imagem muito grande', description: 'Máximo de 8MB.', variant: 'destructive' });
+      return;
+    }
+    setCropFile(file);
+  };
+
+  const onCropConfirm = async (blob: Blob) => {
+    setCropFile(null);
+    setUploading(true);
+    try {
+      const url = await uploadHeroBlob(blob);
+      patch((c) => ({ ...c, theme: { ...c.theme, heroImage: url } }));
+      toast({ title: 'Foto da capa atualizada', description: 'Clique em "Publicar alterações" para ir ao ar.' });
+    } catch (e) {
+      toast({ title: 'Erro no upload', description: (e as Error).message, variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const moveTo = (from: number, to: number) =>
     patch((c) => {
@@ -207,6 +253,50 @@ export default function SiteAppearanceEditor() {
         </div>
 
         {/* Cores e tipografia */}
+        <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+          <h2 className="font-heading text-lg flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-primary" /> Foto da capa (Início)
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            Envie uma foto (JPG/PNG/WebP, até 8MB). Você recorta em 16:9 antes de publicar.
+          </p>
+          <div className="relative group rounded-lg overflow-hidden border border-border">
+            <img
+              src={draft.theme.heroImage || defaultHeroImage}
+              alt="Foto atual da capa do site"
+              className="w-full aspect-video object-cover"
+            />
+            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+              <button
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-2 rounded-lg text-xs font-medium"
+              >
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                Trocar foto
+              </button>
+              {draft.theme.heroImage && (
+                <button
+                  onClick={() => patch((c) => ({ ...c, theme: { ...c.theme, heroImage: '' } }))}
+                  className="inline-flex items-center gap-2 bg-background text-foreground px-3 py-2 rounded-lg text-xs font-medium"
+                >
+                  <Trash2 className="w-4 h-4" /> Restaurar padrão
+                </button>
+              )}
+            </div>
+          </div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              onPickFile(e.target.files?.[0]);
+              e.target.value = '';
+            }}
+          />
+        </div>
+
         <div className="bg-card border border-border rounded-xl p-5 space-y-5">
           <h2 className="font-heading text-lg flex items-center gap-2">
             <Palette className="w-4 h-4 text-primary" /> Cores e estilo
@@ -335,6 +425,15 @@ export default function SiteAppearanceEditor() {
           />
         </div>
       </div>
+
+      {cropFile && (
+        <ImageCropModal
+          file={cropFile}
+          maxWidth={1920}
+          onConfirm={onCropConfirm}
+          onCancel={() => setCropFile(null)}
+        />
+      )}
     </div>
   );
 }
