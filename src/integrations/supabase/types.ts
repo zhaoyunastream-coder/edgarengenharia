@@ -95,6 +95,75 @@ export type Database = {
         }
         Relationships: []
       }
+      site_items: {
+        Row: {
+          created_at: string
+          cta_label: string | null
+          description: string | null
+          gallery: Json
+          id: string
+          image: string | null
+          link_url: string | null
+          published: boolean
+          section: string
+          slug: string | null
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          cta_label?: string | null
+          description?: string | null
+          gallery?: Json
+          id?: string
+          image?: string | null
+          link_url?: string | null
+          published?: boolean
+          section: string
+          slug?: string | null
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          cta_label?: string | null
+          description?: string | null
+          gallery?: Json
+          id?: string
+          image?: string | null
+          link_url?: string | null
+          published?: boolean
+          section?: string
+          slug?: string | null
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          created_at: string
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          updated_at?: string
+          value?: Json
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
