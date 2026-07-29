@@ -1,3 +1,4 @@
+import SectionHeading from './SectionHeading';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollReveal } from '@/hooks/use-scroll-reveal';
@@ -5,7 +6,7 @@ import { supabase, BlogPost } from '@/lib/supabase';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar } from 'lucide-react';
 
-export default function BlogPreviewSection() {
+export default function BlogPreviewSection({ title = "Blog" }: { title?: string }) {
   const { ref, controls, variants } = useScrollReveal();
   const [posts, setPosts] = useState<BlogPost[]>([]);
 
@@ -25,12 +26,7 @@ export default function BlogPreviewSection() {
     <section id="blog" className="py-24 relative">
       <div className="container mx-auto px-4">
         <motion.div ref={ref} initial="hidden" animate={controls} variants={variants}>
-          <div className="text-center mb-16">
-            <p className="text-primary font-semibold text-sm tracking-widest uppercase mb-2">Blog</p>
-            <h2 className="text-4xl md:text-5xl font-heading">
-              Conteúdo para <span className="text-gradient">você</span>
-            </h2>
-          </div>
+          <SectionHeading title={title} />
 
           {posts.length > 0 ? (
             <div className="grid md:grid-cols-3 gap-6 mb-12">
