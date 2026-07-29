@@ -1,6 +1,21 @@
-import { ExternalLink } from 'lucide-react';
+import { ArrowUpRight, Facebook, Globe, Instagram, Building2 } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import { linksUteis } from '@/data/site-content';
+
+function metaFor(label: string, href: string) {
+  const host = (() => {
+    try {
+      return new URL(href).hostname.replace(/^www\./, '');
+    } catch {
+      return href;
+    }
+  })();
+
+  if (/instagram/i.test(label)) return { Icon: Instagram, title: label.replace(/^Instagram\s*-\s*/i, ''), sub: 'Instagram' };
+  if (/facebook/i.test(label)) return { Icon: Facebook, title: label.replace(/^Facebook\s*-\s*/i, ''), sub: 'Facebook' };
+  if (/crea|creci/i.test(label)) return { Icon: Building2, title: label, sub: 'Órgão oficial' };
+  return { Icon: Globe, title: label, sub: host };
+}
 
 export default function LinksUteisSection() {
   return (
@@ -8,20 +23,33 @@ export default function LinksUteisSection() {
       <div className="container mx-auto px-4">
         <SectionHeading title="Links Úteis" />
 
-        <ul className="max-w-3xl mx-auto grid sm:grid-cols-2 gap-3">
-          {linksUteis.map((l) => (
-            <li key={l.href}>
-              <a
-                href={l.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-ref flex items-center gap-3 px-4 py-3 text-[15px] text-foreground/85 hover:text-primary break-all"
-              >
-                <ExternalLink className="w-4 h-4 text-primary shrink-0" />
-                {l.label}
-              </a>
-            </li>
-          ))}
+        <ul className="max-w-4xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {linksUteis.map((l) => {
+            const { Icon, title, sub } = metaFor(l.label, l.href);
+            return (
+              <li key={l.href}>
+                <a
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group card-ref h-full flex items-start gap-3 p-4 hover:-translate-y-0.5"
+                >
+                  <span className="shrink-0 w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon className="w-[18px] h-[18px]" />
+                  </span>
+
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[15px] font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                      {title}
+                    </span>
+                    <span className="block text-xs text-muted-foreground truncate mt-0.5">{sub}</span>
+                  </span>
+
+                  <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground/60 transition-all group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>
