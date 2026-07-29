@@ -1,3 +1,4 @@
+import { trackEvent } from '@/lib/site-analytics';
 import { useState } from 'react';
 import { X, Send, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -80,6 +81,7 @@ export default function ChatWidget() {
               </div>
               <a
                 href={WHATSAPP_URL}
+                onClick={() => trackEvent('conversion_whatsapp')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full bg-emerald-500 hover:bg-emerald-600 text-foreground text-center py-2.5 rounded-lg text-sm font-semibold transition-colors"
