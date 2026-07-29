@@ -1,17 +1,21 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import SectionHeading from './SectionHeading';
-import { imoveis, contato } from '@/data/site-content';
+import { imoveis } from '@/data/site-content';
+import { useSiteSection } from '@/hooks/use-site-items';
 
 export default function ImoveisSection() {
+  const { items } = useSiteSection('imoveis', imoveis);
+
   return (
     <section id="imoveis" className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
         <SectionHeading title="Imóveis" />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-          {imoveis.map((item, i) => (
+          {items.map((item, i) => (
             <motion.article
-              key={item.title}
+              key={item.id}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
@@ -30,18 +34,25 @@ export default function ImoveisSection() {
               )}
               <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
               <p className="text-[15px] text-foreground/80 leading-relaxed whitespace-pre-line mb-5">
-                {item.desc}
+                {item.description}
               </p>
-              <a
-                href={`${contato.whatsappHref}?text=${encodeURIComponent(
-                  `Olá Edgar, gostaria de saber mais sobre o imóvel: ${item.title}`,
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-auto inline-block bg-primary text-primary-foreground px-6 py-3 rounded-[3px] text-sm uppercase tracking-wide hover:brightness-95 transition-all"
-              >
-                Saiba Mais
-              </a>
+              {item.link_url ? (
+                <a
+                  href={item.link_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto inline-block bg-primary text-primary-foreground px-6 py-3 rounded-[3px] text-sm uppercase tracking-wide hover:brightness-95 transition-all"
+                >
+                  {item.cta_label || 'Saiba Mais'}
+                </a>
+              ) : (
+                <Link
+                  to={`/imoveis/${item.slug}`}
+                  className="mt-auto inline-block bg-primary text-primary-foreground px-6 py-3 rounded-[3px] text-sm uppercase tracking-wide hover:brightness-95 transition-all"
+                >
+                  {item.cta_label || 'Saiba Mais'}
+                </Link>
+              )}
             </motion.article>
           ))}
         </div>
