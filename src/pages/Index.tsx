@@ -1,10 +1,14 @@
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
-import AboutSection from '@/components/AboutSection';
 import ServicesSection from '@/components/ServicesSection';
-import DifferentialsSection from '@/components/DifferentialsSection';
+import ImoveisSection from '@/components/ImoveisSection';
+import CursosSection from '@/components/CursosSection';
+import MarketplaceSection from '@/components/MarketplaceSection';
+import VoceSabiaSection from '@/components/VoceSabiaSection';
+import AboutSection from '@/components/AboutSection';
 import BlogPreviewSection from '@/components/BlogPreviewSection';
 import ContactCTASection from '@/components/ContactCTASection';
+import LinksUteisSection from '@/components/LinksUteisSection';
 import Footer from '@/components/Footer';
 import ChatWidget from '@/components/ChatWidget';
 
@@ -12,12 +16,18 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
-      <DifferentialsSection />
-      <BlogPreviewSection />
-      <ContactCTASection />
+      <main>
+        <HeroSection />
+        <ServicesSection />
+        <ImoveisSection />
+        <CursosSection />
+        <MarketplaceSection />
+        <VoceSabiaSection />
+        <AboutSection />
+        <BlogPreviewSection />
+        <ContactCTASection />
+        <LinksUteisSection />
+      </main>
       <Footer />
       <ChatWidget />
     </div>
