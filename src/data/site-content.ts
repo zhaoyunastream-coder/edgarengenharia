@@ -5,6 +5,7 @@ export interface RefItem {
   title: string;
   desc: string;
   image?: string;
+  gallery?: string[];
 }
 
 export const servicos: RefItem[] = [
@@ -88,16 +89,28 @@ export const imoveis: RefItem[] = [
     title: `Terreno Bairro Wincler`,
     desc: `02 Terrenos juntos totalizando 912m² no bairro Wincler, em Carazinho, sito a rua Clemente Bernasque, aceita financiamento bancário, estuda permuta, R$ 100.000,00 cada`,
     image: '/assets/ref/imoveis-terreno-bairro-wincler.webp',
+    gallery: [
+      '/assets/ref/imoveis/terreno-bairro-wincler/01.webp',
+      '/assets/ref/imoveis/terreno-bairro-wincler/02.webp',
+    ],
   },
   {
     title: `Terreno Bairro Santo Antônio`,
     desc: `02 Terrenos juntos totalizando 787,40m² no bairro Santo Antônio, em Carazinho, próximo ao Estádio, sito a rua Castro Alves, aceita financiamento bancário, estuda permuta, R$ 177.000,00 cada`,
     image: '/assets/ref/imoveis-terreno-bairro-santo-antonio.webp',
+    gallery: [
+      '/assets/ref/imoveis/terreno-bairro-santo-antonio/01.webp',
+      '/assets/ref/imoveis/terreno-bairro-santo-antonio/02.webp',
+    ],
   },
   {
     title: `Terreno Morada da Pátria`,
     desc: `Terreno no Morada da Pátria em Carazinho, sito a rua Manacá da Serra, aceita financiamento bancário, estuda permuta, R$ 165.000,00`,
     image: '/assets/ref/imoveis-terreno-morada-da-patria.webp',
+    gallery: [
+      '/assets/ref/imoveis/terreno-morada-da-patria/01.webp',
+      '/assets/ref/imoveis/terreno-morada-da-patria/02.webp',
+    ],
   },
   {
     title: `Terreno e Casa em Igrejinha`,
@@ -106,6 +119,18 @@ Distrito de Igrejinha - Coqueiros do Sul/RS
 estudamos entrada + parcelamento direto
 aceita veículo ou imóvel de menor ou maior valor`,
     image: '/assets/ref/imoveis-terreno-e-casa-em-igrejinha.webp',
+    gallery: [
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/01.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/02.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/03.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/04.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/05.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/06.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/07.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/08.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/09.webp',
+      '/assets/ref/imoveis/terreno-e-casa-em-igrejinha/10.webp',
+    ],
   },
   {
     title: `Gold Shopping`,
@@ -118,6 +143,23 @@ sacada com churrasqueira
 previsão de entrega 12/2027
 entrada facilitada, parcelamento direto`,
     image: '/assets/ref/imoveis-gold-shopping.webp',
+    gallery: [
+      '/assets/ref/imoveis/gold-shopping/01.webp',
+      '/assets/ref/imoveis/gold-shopping/02.webp',
+      '/assets/ref/imoveis/gold-shopping/03.webp',
+      '/assets/ref/imoveis/gold-shopping/04.webp',
+      '/assets/ref/imoveis/gold-shopping/05.webp',
+      '/assets/ref/imoveis/gold-shopping/06.webp',
+      '/assets/ref/imoveis/gold-shopping/07.webp',
+      '/assets/ref/imoveis/gold-shopping/08.webp',
+      '/assets/ref/imoveis/gold-shopping/09.webp',
+      '/assets/ref/imoveis/gold-shopping/10.webp',
+      '/assets/ref/imoveis/gold-shopping/11.webp',
+      '/assets/ref/imoveis/gold-shopping/12.webp',
+      '/assets/ref/imoveis/gold-shopping/13.webp',
+      '/assets/ref/imoveis/gold-shopping/14.webp',
+      '/assets/ref/imoveis/gold-shopping/15.webp',
+    ],
   },
   {
     title: `Apartamento Itapema/SC`,
@@ -133,6 +175,39 @@ todo mobiliado sobre medida
 parcelamento direto
 rua 406, em Itapema/SC, ao lado da Havan`,
     image: '/assets/ref/imoveis-apartamento-itapema-sc.webp',
+    gallery: [
+      '/assets/ref/imoveis/apartamento-itapema-sc/01.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/02.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/03.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/04.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/05.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/06.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/07.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/08.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/09.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/10.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/11.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/12.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/13.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/14.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/15.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/16.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/17.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/18.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/19.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/20.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/21.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/22.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/23.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/24.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/25.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/26.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/27.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/28.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/29.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/30.webp',
+      '/assets/ref/imoveis/apartamento-itapema-sc/31.webp',
+    ],
   },
   {
     title: `Apartamento Porto Belo/SC`,
@@ -147,6 +222,23 @@ fica pronto 12/2030
 entrada facilitada, parcelamento direto
 em Porto Belo/SC, praia do Perequê`,
     image: '/assets/ref/imoveis-apartamento-porto-belo-sc.webp',
+    gallery: [
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/01.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/02.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/03.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/04.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/05.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/06.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/07.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/08.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/09.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/10.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/11.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/12.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/13.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/14.webp',
+      '/assets/ref/imoveis/apartamento-porto-belo-sc/15.webp',
+    ],
   },
   {
     title: `LOCAÇÃO TEMPORADA - ARROIO DO SAL/RS`,

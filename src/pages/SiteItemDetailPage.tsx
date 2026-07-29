@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, MessageCircle, Phone } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, MessageCircle, Phone, X, ZoomIn } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ChatWidget from '@/components/ChatWidget';
@@ -38,18 +38,37 @@ export default function SiteItemDetailPage({ sectionKey }: { sectionKey: keyof t
   const cfg = CONFIG[sectionKey];
   const { slug } = useParams<{ slug: string }>();
   const { item, isLoading } = useSiteItem(cfg.section, slug, cfg.fallback);
-  const [active, setActive] = useState<string | null>(null);
+  const [index, setIndex] = useState(0);
+  const [lightbox, setLightbox] = useState(false);
 
-  const images = item ? [item.image, ...item.gallery].filter(Boolean) as string[] : [];
-  const current = active ?? images[0] ?? null;
+  const images = item
+    ? (Array.from(new Set([item.image, ...item.gallery].filter(Boolean))) as string[])
+    : [];
+  const current = images[index] ?? images[0] ?? null;
+
+  const go = useCallback(
+    (dir: number) => setIndex((i) => (images.length ? (i + dir + images.length) % images.length : 0)),
+    [images.length],
+  );
 
   useEffect(() => {
-    setActive(null);
+    setIndex(0);
     window.scrollTo({ top: 0 });
     if (item) {
       document.title = `${item.title} | ${cfg.label} - Engenheiro Edgar`;
     }
   }, [slug, item, cfg.label]);
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightbox(false);
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') go(-1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightbox, go]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -71,26 +90,71 @@ export default function SiteItemDetailPage({ sectionKey }: { sectionKey: keyof t
               <p className="text-muted-foreground">Este item não está mais disponível.</p>
             </div>
           ) : (
-            <article className="grid md:grid-cols-2 gap-10">
-              <div>
+            <article className="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-10 items-start">
+              <div className="lg:sticky lg:top-28">
                 {current && (
-                  <img
-                    src={current}
-                    alt={item.title}
-                    className="w-full aspect-video object-cover rounded-lg border border-border"
-                  />
+                  <div className="group relative overflow-hidden rounded-xl border border-border bg-muted">
+                    <img
+                      src={current}
+                      alt={`${item.title} — foto ${index + 1}`}
+                      loading="eager"
+                      className="w-full aspect-[4/3] object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-[1.02]"
+                      onClick={() => setLightbox(true)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setLightbox(true)}
+                      aria-label="Ampliar foto"
+                      className="absolute top-3 right-3 rounded-full bg-background/85 backdrop-blur p-2 text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ZoomIn className="w-4 h-4" />
+                    </button>
+                    {images.length > 1 && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => go(-1)}
+                          aria-label="Foto anterior"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-background/85 backdrop-blur p-2 text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => go(1)}
+                          aria-label="Próxima foto"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-background/85 backdrop-blur p-2 text-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background"
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                        <span className="absolute bottom-3 left-3 rounded-full bg-foreground/70 text-background text-xs px-3 py-1">
+                          {index + 1} / {images.length}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 )}
+
                 {images.length > 1 && (
-                  <div className="grid grid-cols-4 gap-2 mt-3">
-                    {images.map((img) => (
+                  <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 mt-3">
+                    {images.map((img, i) => (
                       <button
                         key={img}
-                        onClick={() => setActive(img)}
-                        className={`aspect-video overflow-hidden rounded border transition-all ${
-                          img === current ? 'border-primary' : 'border-border opacity-70 hover:opacity-100'
+                        type="button"
+                        onClick={() => setIndex(i)}
+                        aria-label={`Ver foto ${i + 1}`}
+                        className={`aspect-square overflow-hidden rounded-md border-2 transition-all ${
+                          i === index
+                            ? 'border-primary ring-2 ring-primary/25'
+                            : 'border-transparent opacity-70 hover:opacity-100'
                         }`}
                       >
-                        <img src={img} alt={item.title} className="w-full h-full object-cover" />
+                        <img
+                          src={img}
+                          alt={`${item.title} — miniatura ${i + 1}`}
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
                       </button>
                     ))}
                   </div>
@@ -134,6 +198,58 @@ export default function SiteItemDetailPage({ sectionKey }: { sectionKey: keyof t
           )}
         </div>
       </main>
+
+      {lightbox && current && (
+        <div
+          className="fixed inset-0 z-[100] bg-foreground/95 flex items-center justify-center p-4"
+          onClick={() => setLightbox(false)}
+        >
+          <button
+            type="button"
+            aria-label="Fechar"
+            className="absolute top-5 right-5 text-background p-2"
+            onClick={() => setLightbox(false)}
+          >
+            <X className="w-6 h-6" />
+          </button>
+          {images.length > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label="Foto anterior"
+                className="absolute left-4 md:left-8 text-background p-3"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  go(-1);
+                }}
+              >
+                <ChevronLeft className="w-8 h-8" />
+              </button>
+              <button
+                type="button"
+                aria-label="Próxima foto"
+                className="absolute right-4 md:right-8 text-background p-3"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  go(1);
+                }}
+              >
+                <ChevronRight className="w-8 h-8" />
+              </button>
+            </>
+          )}
+          <img
+            src={current}
+            alt={`Foto ampliada ${index + 1}`}
+            className="max-h-[88vh] max-w-[92vw] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+          <span className="absolute bottom-5 text-background/80 text-sm">
+            {index + 1} / {images.length}
+          </span>
+        </div>
+      )}
+
       <Footer />
       <ChatWidget />
     </div>

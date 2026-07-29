@@ -59,7 +59,7 @@ export const fromStatic = (section: SiteSection, items: RefItem[]): SiteItem[] =
     slug: slugify(it.title),
     description: it.desc ?? null,
     image: it.image ?? null,
-    gallery: [],
+    gallery: it.gallery ?? [],
     link_url: null,
     cta_label: null,
     sort_order: i,

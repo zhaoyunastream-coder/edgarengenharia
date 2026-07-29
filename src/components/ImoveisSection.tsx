@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Image as ImageIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SectionHeading from './SectionHeading';
 import { imoveis } from '@/data/site-content';
@@ -33,6 +34,12 @@ export default function ImoveisSection() {
                 />
               )}
               <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
+              {item.gallery.length > 0 && (
+                <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-primary font-semibold mb-3">
+                  <ImageIcon className="w-3.5 h-3.5" />
+                  {item.gallery.length + (item.image ? 1 : 0)} fotos
+                </span>
+              )}
               <p className="text-[15px] text-foreground/80 leading-relaxed whitespace-pre-line mb-5">
                 {item.description}
               </p>
