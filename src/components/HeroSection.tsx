@@ -12,7 +12,8 @@ export default function HeroSection() {
         alt="Engenheiro analisando planta de loteamento sobre a mesa"
         width={1920}
         height={1280}
-        fetchPriority="high"
+        // eslint-disable-next-line react/no-unknown-property
+        fetchpriority="high"
         decoding="async"
         className="absolute inset-0 w-full h-full object-cover"
       />
