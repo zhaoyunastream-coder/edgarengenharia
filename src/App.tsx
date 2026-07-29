@@ -15,6 +15,8 @@ import AdminPosts from "./pages/admin/AdminPosts";
 import AdminPostEditor from "./pages/admin/AdminPostEditor";
 import AdminContacts from "./pages/admin/AdminContacts";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminSiteEditor from "./pages/admin/AdminSiteEditor";
+import SiteItemDetailPage from "./pages/SiteItemDetailPage";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +31,9 @@ const App = () => (
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/blog/:slug" element={<BlogPostPage />} />
             <Route path="/contato" element={<ContactPage />} />
+            <Route path="/imoveis/:slug" element={<SiteItemDetailPage sectionKey="imoveis" />} />
+            <Route path="/cursos/:slug" element={<SiteItemDetailPage sectionKey="cursos" />} />
+            <Route path="/marketplace/:slug" element={<SiteItemDetailPage sectionKey="marketplace" />} />
 
             {/* Admin routes */}
             <Route path="/admin" element={<AdminLogin />} />
@@ -38,6 +43,7 @@ const App = () => (
               <Route path="/admin/posts/new" element={<AdminPostEditor />} />
               <Route path="/admin/posts/edit/:id" element={<AdminPostEditor />} />
               <Route path="/admin/contatos" element={<AdminContacts />} />
+              <Route path="/admin/site" element={<AdminSiteEditor />} />
               <Route path="/admin/analytics" element={<AdminAnalytics />} />
             </Route>
 
