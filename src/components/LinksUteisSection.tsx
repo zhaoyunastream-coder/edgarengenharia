@@ -19,7 +19,7 @@ function metaFor(label: string, href: string) {
   return { Icon: Globe, title: label, sub: host };
 }
 
-export default function LinksUteisSection() {
+export default function LinksUteisSection({ title = "Links Úteis" }: { title?: string }) {
   const { data } = useQuery({
     queryKey: ['site-items', 'links'],
     queryFn: async () => {
@@ -42,7 +42,7 @@ export default function LinksUteisSection() {
   return (
     <section id="links-uteis" className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
-        <SectionHeading title="Links Úteis" />
+        <SectionHeading title={title} />
 
         <ul className="max-w-4xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {links.map((l) => {

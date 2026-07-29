@@ -3,13 +3,13 @@ import SectionHeading from './SectionHeading';
 import { servicos } from '@/data/site-content';
 import { useSiteSection } from '@/hooks/use-site-items';
 
-export default function ServicesSection() {
+export default function ServicesSection({ title = "Serviços" }: { title?: string }) {
   const { items } = useSiteSection('servicos', servicos);
 
   return (
     <section id="servicos" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        <SectionHeading title="Serviços" />
+        <SectionHeading title={title} />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((service, i) => (

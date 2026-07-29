@@ -43,7 +43,7 @@ const info = [
   { icon: Clock, label: 'Horário', value: contato.horario },
 ];
 
-export default function ContactCTASection() {
+export default function ContactCTASection({ title = "Contato" }: { title?: string }) {
   const [submitting, setSubmitting] = useState(false);
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactForm>({
@@ -75,7 +75,7 @@ export default function ContactCTASection() {
   return (
     <section id="contato" className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        <SectionHeading title="Contato" />
+        <SectionHeading title={title} />
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
           {/* Info */}
