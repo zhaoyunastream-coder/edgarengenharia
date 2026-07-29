@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import SectionHeading from './SectionHeading';
-import { cursos, contato } from '@/data/site-content';
+import { cursos } from '@/data/site-content';
+import { useSiteSection } from '@/hooks/use-site-items';
 
 const STEP = 12;
 
 export default function CursosSection() {
+  const { items } = useSiteSection('cursos', cursos);
   const [visible, setVisible] = useState(STEP);
-  const shown = cursos.slice(0, visible);
+  const shown = items.slice(0, visible);
 
   return (
     <section id="cursos" className="py-16 md:py-24 bg-background">
@@ -17,7 +20,7 @@ export default function CursosSection() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {shown.map((item, i) => (
             <motion.article
-              key={item.title + i}
+              key={item.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.1 }}
@@ -37,24 +40,31 @@ export default function CursosSection() {
               <div className="p-5 text-left flex flex-col flex-1">
                 <h3 className="text-lg font-bold text-foreground mb-2">{item.title}</h3>
                 <p className="text-sm text-foreground/75 leading-relaxed whitespace-pre-line line-clamp-6">
-                  {item.desc}
+                  {item.description}
                 </p>
-                <a
-                  href={`${contato.whatsappHref}?text=${encodeURIComponent(
-                    `Olá Edgar, tenho interesse no curso: ${item.title}`,
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 self-start text-sm uppercase tracking-wide text-primary hover:underline"
-                >
-                  Saiba Mais
-                </a>
+                {item.link_url ? (
+                  <a
+                    href={item.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 self-start text-sm uppercase tracking-wide text-primary hover:underline"
+                  >
+                    {item.cta_label || 'Saiba Mais'}
+                  </a>
+                ) : (
+                  <Link
+                    to={`/cursos/${item.slug}`}
+                    className="mt-4 self-start text-sm uppercase tracking-wide text-primary hover:underline"
+                  >
+                    {item.cta_label || 'Saiba Mais'}
+                  </Link>
+                )}
               </div>
             </motion.article>
           ))}
         </div>
 
-        {visible < cursos.length && (
+        {visible < items.length && (
           <div className="text-center mt-10">
             <button
               onClick={() => setVisible((v) => v + STEP)}
