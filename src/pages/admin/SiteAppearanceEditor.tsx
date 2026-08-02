@@ -4,6 +4,7 @@ import {
   Eye,
   EyeOff,
   GripVertical,
+  HelpCircle,
   ImageIcon,
   Loader2,
   Monitor,
@@ -45,6 +46,56 @@ const PALETTES = [
   { label: 'Grafite & âmbar', primary: '#E8A33D', background: '#FFFFFF', foreground: '#22252A', muted: '#F5F5F4' },
 ];
 
+const DESKTOP_PREVIEW_WIDTH = 1440;
+
+const TUTORIAL_STEPS: { title: string; body: string }[] = [
+  {
+    title: '1. O que é esta tela',
+    body:
+      'Aqui do lado direito você vê o site exatamente como o visitante vê. Tudo que você mudar no painel da esquerda aparece na hora na pré-visualização — mas ainda NÃO está no ar.',
+  },
+  {
+    title: '2. Publicar as mudanças',
+    body:
+      'Depois de mexer em qualquer coisa, clique no botão azul "Publicar alterações" no topo do painel. Enquanto ele estiver escrito "Tudo salvo", nada está pendente. O botão da setinha ao lado desfaz o que você mudou e ainda não publicou.',
+  },
+  {
+    title: '3. Mostrar / esconder seções',
+    body:
+      'No bloco "Seções da página", cada linha é uma faixa do site (Início, Serviços, Imóveis...). Clique no olho para esconder — a seção some da home E também do menu do topo e do rodapé. Clique de novo para mostrar.',
+  },
+  {
+    title: '4. Mudar a ordem das seções',
+    body:
+      'Segure o ícone de pontinhos (⠿) à esquerda do nome e arraste a linha para cima ou para baixo. O número da direita mostra a posição final na página.',
+  },
+  {
+    title: '5. Trocar títulos',
+    body:
+      'No bloco "Títulos das seções" você troca o nome que aparece em cada faixa do site (e no menu). Na capa você também pode escrever o subtítulo, aquela frase menor embaixo do nome.',
+  },
+  {
+    title: '6. Trocar a foto de capa',
+    body:
+      'Passe o mouse em cima da foto no bloco "Foto da capa", clique em "Trocar foto" e escolha a imagem no seu computador. Depois arraste/dê zoom para escolher o enquadramento e confirme. "Restaurar padrão" volta a foto original.',
+  },
+  {
+    title: '7. Cores, fonte e cantos',
+    body:
+      'Escolha uma paleta pronta ou clique no quadradinho colorido para escolher a cor manualmente. A "Cor principal" é o destaque (botões e links). Os controles deslizantes mudam o arredondamento dos cantos e o quanto a foto da capa fica escura por trás do texto.',
+  },
+  {
+    title: '8. Ver no celular',
+    body:
+      'Nos ícones acima da pré-visualização, escolha o monitor (computador) ou o celular para conferir como fica em cada tela. No modo computador o menu aparece escrito; no celular ele vira o botão de três risquinhos.',
+  },
+  {
+    title: '9. E o conteúdo (imóveis, serviços, blog)?',
+    body:
+      'Fotos, textos e itens de cada seção ficam na aba "Conteúdo das seções", no topo desta página. Lá você adiciona, edita e apaga imóveis, serviços, produtos e links.',
+  },
+];
+
 async function uploadHeroBlob(blob: Blob) {
   const path = `site/hero-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
   const { error } = await supabase.storage.from('blog-images').upload(path, blob, {
@@ -60,11 +111,23 @@ export default function SiteAppearanceEditor() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
+  const [showTutorial, setShowTutorial] = useState(false);
+  const previewBoxRef = useRef<HTMLDivElement>(null);
+  const [boxWidth, setBoxWidth] = useState(0);
   const [draft, setDraft] = useState<SiteConfig | null>(null);
   const [ready, setReady] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    const el = previewBoxRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setBoxWidth(entry.contentRect.width));
+    ro.observe(el);
+    setBoxWidth(el.clientWidth);
+    return () => ro.disconnect();
+  }, []);
 
   const { data, isLoading } = useQuery({ queryKey: ['site-config'], queryFn: fetchSiteConfig });
 
