@@ -7,12 +7,17 @@ import {
   HelpCircle,
   ImageIcon,
   Loader2,
+  MessageSquare,
   Monitor,
   Palette,
+  Phone,
+  Plus,
   RotateCcw,
   Save,
+  Share2,
   Smartphone,
   Trash2,
+  User,
   Upload,
   Type as TypeIcon,
 } from 'lucide-react';
@@ -26,6 +31,8 @@ import {
   SECTION_DEFS,
   fetchSiteConfig,
   saveSiteConfig,
+  type SiteContact,
+  type SocialIcon,
   type SiteConfig,
   type SectionId,
 } from '@/hooks/use-site-config';
@@ -47,6 +54,21 @@ const PALETTES = [
 ];
 
 const DESKTOP_PREVIEW_WIDTH = 1440;
+
+const CONTACT_FIELDS: { key: keyof SiteContact; label: string; placeholder?: string }[] = [
+  { key: 'endereco', label: 'Endereço' },
+  { key: 'mapa', label: 'Link do Google Maps (opcional)', placeholder: 'Deixe vazio para gerar pelo endereço' },
+  { key: 'whatsapp', label: 'WhatsApp', placeholder: '+55-54999999999' },
+  { key: 'telefone', label: 'Telefone', placeholder: '+55-54999999999' },
+  { key: 'email', label: 'E-mail' },
+  { key: 'horario', label: 'Horário de atendimento' },
+  { key: 'crea', label: 'CREA' },
+  { key: 'creci', label: 'CRECI' },
+];
+
+const SOCIAL_ICON_OPTIONS: SocialIcon[] = ['facebook', 'instagram', 'whatsapp', 'email', 'linkedin', 'youtube', 'site'];
+
+const inputCls = 'w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm';
 
 const TUTORIAL_STEPS: { title: string; body: string }[] = [
   {
@@ -96,8 +118,8 @@ const TUTORIAL_STEPS: { title: string; body: string }[] = [
   },
 ];
 
-async function uploadHeroBlob(blob: Blob) {
-  const path = `site/hero-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
+async function uploadBlob(blob: Blob, prefix = 'hero') {
+  const path = `site/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
   const { error } = await supabase.storage.from('blog-images').upload(path, blob, {
     contentType: 'image/webp',
     upsert: false,
@@ -110,6 +132,8 @@ export default function SiteAppearanceEditor() {
   const qc = useQueryClient();
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const aboutFileRef = useRef<HTMLInputElement>(null);
+  const logoFileRef = useRef<HTMLInputElement>(null);
   const [device, setDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [showTutorial, setShowTutorial] = useState(false);
   const previewBoxRef = useRef<HTMLDivElement>(null);
@@ -118,6 +142,7 @@ export default function SiteAppearanceEditor() {
   const [ready, setReady] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
+  const [cropTarget, setCropTarget] = useState<'hero' | 'about'>('hero');
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -172,7 +197,7 @@ export default function SiteAppearanceEditor() {
 
   const patch = (fn: (c: SiteConfig) => SiteConfig) => setDraft((c) => (c ? fn(c) : c));
 
-  const onPickFile = (file?: File | null) => {
+  const onPickFile = (file: File | null | undefined, target: 'hero' | 'about' = 'hero') => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
       toast({ title: 'Arquivo inválido', description: 'Selecione uma imagem.', variant: 'destructive' });
@@ -182,16 +207,40 @@ export default function SiteAppearanceEditor() {
       toast({ title: 'Imagem muito grande', description: 'Máximo de 8MB.', variant: 'destructive' });
       return;
     }
+    setCropTarget(target);
     setCropFile(file);
   };
 
+  const onPickLogo = async (file?: File | null) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast({ title: 'Arquivo inválido', description: 'Selecione uma imagem.', variant: 'destructive' });
+      return;
+    }
+    setUploading(true);
+    try {
+      const path = `site/logo-${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${file.name.replace(/[^\w.-]/g, '')}`;
+      const { error } = await supabase.storage.from('blog-images').upload(path, file, { contentType: file.type });
+      if (error) throw error;
+      const url = supabase.storage.from('blog-images').getPublicUrl(path).data.publicUrl;
+      patch((c) => ({ ...c, brand: { ...c.brand, logo: url } }));
+      toast({ title: 'Logo atualizada', description: 'Clique em "Publicar alterações".' });
+    } catch (e) {
+      toast({ title: 'Erro no upload', description: (e as Error).message, variant: 'destructive' });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const onCropConfirm = async (blob: Blob) => {
+    const target = cropTarget;
     setCropFile(null);
     setUploading(true);
     try {
-      const url = await uploadHeroBlob(blob);
-      patch((c) => ({ ...c, theme: { ...c.theme, heroImage: url } }));
-      toast({ title: 'Foto da capa atualizada', description: 'Clique em "Publicar alterações" para ir ao ar.' });
+      const url = await uploadBlob(blob, target);
+      if (target === 'about') patch((c) => ({ ...c, about: { ...c.about, image: url } }));
+      else patch((c) => ({ ...c, theme: { ...c.theme, heroImage: url } }));
+      toast({ title: 'Foto atualizada', description: 'Clique em "Publicar alterações" para ir ao ar.' });
     } catch (e) {
       toast({ title: 'Erro no upload', description: (e as Error).message, variant: 'destructive' });
     } finally {
@@ -387,6 +436,266 @@ export default function SiteAppearanceEditor() {
           />
         </div>
 
+        {/* Marca / logo */}
+        <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+          <h2 className="font-heading text-lg flex items-center gap-2">
+            <ImageIcon className="w-4 h-4 text-primary" /> Marca e rodapé
+          </h2>
+          <div className="flex items-center gap-3">
+            <img src={draft.brand.logo} alt="Logo atual" className="h-12 w-auto object-contain bg-muted rounded p-1" />
+            <button
+              onClick={() => logoFileRef.current?.click()}
+              disabled={uploading}
+              className="inline-flex items-center gap-2 border border-border rounded-lg px-3 py-2 text-xs hover:bg-muted"
+            >
+              <Upload className="w-4 h-4" /> Trocar logo
+            </button>
+            <input
+              ref={logoFileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                onPickLogo(e.target.files?.[0]);
+                e.target.value = '';
+              }}
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground">Frase do rodapé</label>
+            <textarea
+              rows={2}
+              value={draft.brand.tagline}
+              onChange={(e) => patch((c) => ({ ...c, brand: { ...c.brand, tagline: e.target.value } }))}
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground">Texto de copyright</label>
+            <input
+              value={draft.brand.copyright}
+              onChange={(e) => patch((c) => ({ ...c, brand: { ...c.brand, copyright: e.target.value } }))}
+              className={inputCls}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="text-xs text-muted-foreground">Crédito (nome)</label>
+              <input
+                value={draft.brand.credit}
+                onChange={(e) => patch((c) => ({ ...c, brand: { ...c.brand, credit: e.target.value } }))}
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground">Crédito (link)</label>
+              <input
+                value={draft.brand.creditUrl}
+                onChange={(e) => patch((c) => ({ ...c, brand: { ...c.brand, creditUrl: e.target.value } }))}
+                className={inputCls}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Contato */}
+        <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+          <h2 className="font-heading text-lg flex items-center gap-2">
+            <Phone className="w-4 h-4 text-primary" /> Dados de contato
+          </h2>
+          <p className="text-xs text-muted-foreground">
+            Usados no menu, na seção Contato, no rodapé e no botão de WhatsApp.
+          </p>
+          {CONTACT_FIELDS.map((f) => (
+            <div key={f.key}>
+              <label className="text-xs text-muted-foreground">{f.label}</label>
+              <input
+                value={draft.contact[f.key] ?? ''}
+                placeholder={f.placeholder}
+                onChange={(e) => patch((c) => ({ ...c, contact: { ...c.contact, [f.key]: e.target.value } }))}
+                className={inputCls}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Redes sociais */}
+        <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+          <h2 className="font-heading text-lg flex items-center gap-2">
+            <Share2 className="w-4 h-4 text-primary" /> Redes sociais (rodapé)
+          </h2>
+          {draft.socials.map((s, i) => (
+            <div key={i} className="border border-border rounded-lg p-3 space-y-2">
+              <div className="flex gap-2">
+                <select
+                  value={s.icon}
+                  onChange={(e) =>
+                    patch((c) => ({
+                      ...c,
+                      socials: c.socials.map((x, j) => (j === i ? { ...x, icon: e.target.value as SocialIcon } : x)),
+                    }))
+                  }
+                  className="bg-background border border-border rounded-lg px-2 py-2 text-sm"
+                >
+                  {SOCIAL_ICON_OPTIONS.map((o) => (
+                    <option key={o} value={o}>{o}</option>
+                  ))}
+                </select>
+                <input
+                  value={s.label}
+                  placeholder="Nome"
+                  onChange={(e) =>
+                    patch((c) => ({
+                      ...c,
+                      socials: c.socials.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)),
+                    }))
+                  }
+                  className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-sm"
+                />
+                <button
+                  onClick={() => patch((c) => ({ ...c, socials: c.socials.filter((_, j) => j !== i) }))}
+                  className="p-2 rounded-lg border border-border hover:bg-muted"
+                  title="Remover"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+              <input
+                value={s.url}
+                placeholder="https://... (vazio usa WhatsApp/E-mail do contato)"
+                onChange={(e) =>
+                  patch((c) => ({
+                    ...c,
+                    socials: c.socials.map((x, j) => (j === i ? { ...x, url: e.target.value } : x)),
+                  }))
+                }
+                className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm"
+              />
+            </div>
+          ))}
+          <button
+            onClick={() =>
+              patch((c) => ({ ...c, socials: [...c.socials, { label: 'Nova rede', url: '', icon: 'site' }] }))
+            }
+            className="inline-flex items-center gap-2 text-sm border border-border rounded-lg px-3 py-2 hover:bg-muted"
+          >
+            <Plus className="w-4 h-4" /> Adicionar rede
+          </button>
+        </div>
+
+        {/* Sobre */}
+        <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+          <h2 className="font-heading text-lg flex items-center gap-2">
+            <User className="w-4 h-4 text-primary" /> Seção "Sobre"
+          </h2>
+          <div className="flex items-center gap-3">
+            <img src={draft.about.image} alt="Foto do Sobre" className="w-16 h-16 rounded-full object-cover" />
+            <button
+              onClick={() => aboutFileRef.current?.click()}
+              disabled={uploading}
+              className="inline-flex items-center gap-2 border border-border rounded-lg px-3 py-2 text-xs hover:bg-muted"
+            >
+              <Upload className="w-4 h-4" /> Trocar foto
+            </button>
+            <input
+              ref={aboutFileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                onPickFile(e.target.files?.[0], 'about');
+                e.target.value = '';
+              }}
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground">Texto principal</label>
+            <textarea
+              rows={10}
+              value={draft.about.text}
+              onChange={(e) => patch((c) => ({ ...c, about: { ...c.about, text: e.target.value } }))}
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground">Frase de encerramento</label>
+            <input
+              value={draft.about.closing}
+              onChange={(e) => patch((c) => ({ ...c, about: { ...c.about, closing: e.target.value } }))}
+              className={inputCls}
+            />
+          </div>
+        </div>
+
+        {/* Formulário */}
+        <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+          <h2 className="font-heading text-lg flex items-center gap-2">
+            <TypeIcon className="w-4 h-4 text-primary" /> Formulário de contato
+          </h2>
+          <div>
+            <label className="text-xs text-muted-foreground">Assuntos (um por linha)</label>
+            <textarea
+              rows={8}
+              value={draft.form.services.join('\n')}
+              onChange={(e) =>
+                patch((c) => ({
+                  ...c,
+                  form: { ...c.form, services: e.target.value.split('\n').map((s) => s.trim()).filter(Boolean) },
+                }))
+              }
+              className={inputCls}
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground">Texto do botão</label>
+            <input
+              value={draft.form.buttonLabel}
+              onChange={(e) => patch((c) => ({ ...c, form: { ...c.form, buttonLabel: e.target.value } }))}
+              className={inputCls}
+            />
+          </div>
+        </div>
+
+        {/* Chat WhatsApp */}
+        <div className="bg-card border border-border rounded-xl p-5 space-y-3">
+          <h2 className="font-heading text-lg flex items-center gap-2">
+            <MessageSquare className="w-4 h-4 text-primary" /> Balão de WhatsApp
+          </h2>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={draft.chat.enabled}
+              onChange={(e) => patch((c) => ({ ...c, chat: { ...c.chat, enabled: e.target.checked } }))}
+              className="accent-primary w-4 h-4"
+            />
+            Mostrar o balão flutuante no site
+          </label>
+          {([
+            ['bubble', 'Frase do balão'],
+            ['name', 'Nome exibido'],
+            ['status', 'Status (ex.: Online agora)'],
+            ['buttonLabel', 'Texto do botão'],
+          ] as const).map(([key, label]) => (
+            <div key={key}>
+              <label className="text-xs text-muted-foreground">{label}</label>
+              <input
+                value={draft.chat[key]}
+                onChange={(e) => patch((c) => ({ ...c, chat: { ...c.chat, [key]: e.target.value } }))}
+                className={inputCls}
+              />
+            </div>
+          ))}
+          <div>
+            <label className="text-xs text-muted-foreground">Mensagem de boas-vindas</label>
+            <textarea
+              rows={4}
+              value={draft.chat.greeting}
+              onChange={(e) => patch((c) => ({ ...c, chat: { ...c.chat, greeting: e.target.value } }))}
+              className={inputCls}
+            />
+          </div>
+        </div>
+
         <div className="bg-card border border-border rounded-xl p-5 space-y-5">
           <h2 className="font-heading text-lg flex items-center gap-2">
             <Palette className="w-4 h-4 text-primary" /> Cores e estilo
@@ -547,7 +856,8 @@ export default function SiteAppearanceEditor() {
       {cropFile && (
         <ImageCropModal
           file={cropFile}
-          maxWidth={1920}
+          maxWidth={cropTarget === 'about' ? 800 : 1920}
+          aspectRatio={cropTarget === 'about' ? 1 : 16 / 9}
           onConfirm={onCropConfirm}
           onCancel={() => setCropFile(null)}
         />

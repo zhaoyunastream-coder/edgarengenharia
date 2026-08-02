@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { MessageCircle, Mail, MapPin, Clock, Phone, Send, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import SectionHeading from './SectionHeading';
-import { contato } from '@/data/site-content';
+import { mapHref, telHref, useSiteConfig, waHref } from '@/hooks/use-site-config';
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, 'Nome é obrigatório').max(100),
@@ -19,32 +19,19 @@ const contactSchema = z.object({
 
 type ContactForm = z.infer<typeof contactSchema>;
 
-const services = [
-  'Projetos e Execução de Obras',
-  'Compatibilização BIM',
-  'Regularização de Imóveis',
-  'INSS de Obras',
-  'Desmembramento e Unificação',
-  'Cálculos Estruturais',
-  'Incorporação de Imóveis',
-  'PPCI',
-  'Acessibilidade',
-  'Perícias e Laudos',
-  'Imóveis',
-  'Marketplace',
-  'Outro',
-];
-
-const info = [
-  { icon: MapPin, label: 'Endereço', value: contato.endereco, href: contato.mapa },
-  { icon: MessageCircle, label: 'WhatsApp', value: contato.whatsapp, href: contato.whatsappHref },
-  { icon: Phone, label: 'Telefone', value: contato.telefone, href: contato.telefoneHref },
-  { icon: Mail, label: 'E-mail', value: contato.email, href: `mailto:${contato.email}` },
-  { icon: Clock, label: 'Horário', value: contato.horario },
-];
-
 export default function ContactCTASection({ title = "Contato" }: { title?: string }) {
   const [submitting, setSubmitting] = useState(false);
+  const { config } = useSiteConfig();
+  const contato = config.contact;
+  const services = config.form.services;
+
+  const info = [
+    { icon: MapPin, label: 'Endereço', value: contato.endereco, href: mapHref(contato) },
+    { icon: MessageCircle, label: 'WhatsApp', value: contato.whatsapp, href: waHref(contato) },
+    { icon: Phone, label: 'Telefone', value: contato.telefone, href: telHref(contato) },
+    { icon: Mail, label: 'E-mail', value: contato.email, href: `mailto:${contato.email}` },
+    { icon: Clock, label: 'Horário', value: contato.horario, href: undefined as string | undefined },
+  ].filter((i) => Boolean(i.value));
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactForm>({
     resolver: zodResolver(contactSchema),
@@ -130,7 +117,7 @@ export default function ContactCTASection({ title = "Contato" }: { title?: strin
               className="w-full bg-primary text-primary-foreground px-6 py-3 rounded-[3px] text-sm uppercase tracking-wide flex items-center justify-center gap-2 hover:brightness-95 transition-all disabled:opacity-60"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-              Enviar
+              {config.form.buttonLabel || 'Enviar'}
             </button>
           </form>
         </div>

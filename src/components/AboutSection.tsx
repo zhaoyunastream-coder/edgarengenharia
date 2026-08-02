@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
 import SectionHeading from './SectionHeading';
-import { sobreImage, sobreTexto, contato } from '@/data/site-content';
+import { useSiteConfig } from '@/hooks/use-site-config';
 
 export default function AboutSection({ title = "Sobre" }: { title?: string }) {
+  const { config } = useSiteConfig();
+  const { about, contact } = config;
   return (
     <section id="sobre" className="py-16 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
@@ -16,7 +18,7 @@ export default function AboutSection({ title = "Sobre" }: { title?: string }) {
           className="max-w-4xl mx-auto text-center"
         >
           <img
-            src={sobreImage}
+            src={about.image}
             alt="Edgar Alexandre Kmiecik, Engenheiro Civil"
             width={600}
             height={600}
@@ -24,13 +26,13 @@ export default function AboutSection({ title = "Sobre" }: { title?: string }) {
             className="w-40 h-40 md:w-48 md:h-48 rounded-full object-cover mx-auto mb-8 shadow-md"
           />
           <p className="text-[15px] md:text-base text-foreground/80 leading-[1.9] text-justify">
-            {sobreTexto}
+            {about.text}
           </p>
-          <p className="mt-6 text-base font-semibold text-foreground">
-            Entre em contato, que terei o maior prazer em lhe atender.
-          </p>
+          {about.closing && (
+            <p className="mt-6 text-base font-semibold text-foreground">{about.closing}</p>
+          )}
           <p className="mt-4 text-sm text-muted-foreground">
-            {contato.crea} &nbsp;|&nbsp; {contato.creci}
+            {contact.crea} &nbsp;|&nbsp; {contact.creci}
           </p>
         </motion.div>
       </div>
