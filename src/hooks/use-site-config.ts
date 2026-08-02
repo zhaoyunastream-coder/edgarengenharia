@@ -225,3 +225,41 @@ export function useSiteConfig() {
 
 export const textOf = (config: SiteConfig, id: SectionId, field: keyof SectionText = 'title') =>
   config.texts?.[id]?.[field] ?? DEFAULT_TEXTS[id]?.[field] ?? '';
+
+/* ---------- navegação derivada do layout ---------- */
+
+const SECTION_ANCHORS: Record<SectionId, string> = {
+  hero: '/#inicio',
+  servicos: '/#servicos',
+  imoveis: '/#imoveis',
+  cursos: '/#cursos',
+  marketplace: '/#marketplace',
+  vocesabia: '/#voce-sabia',
+  sobre: '/#sobre',
+  blog: '/blog',
+  contato: '/#contato',
+  links: '/#links-uteis',
+};
+
+const NAV_LABEL_OVERRIDES: Partial<Record<SectionId, string>> = {
+  hero: 'Início',
+  blog: 'Blog',
+};
+
+export interface NavItem {
+  id: SectionId;
+  label: string;
+  href: string;
+}
+
+/** Links de menu (navbar/rodapé) apenas das seções visíveis, na ordem do layout. */
+export function navItemsFrom(config: SiteConfig): NavItem[] {
+  return config.layout
+    .filter((s) => s.visible)
+    .map((s) => ({
+      id: s.id,
+      label: NAV_LABEL_OVERRIDES[s.id] ?? textOf(config, s.id) ?? s.id,
+      href: SECTION_ANCHORS[s.id],
+    }))
+    .filter((i) => Boolean(i.href));
+}

@@ -3,24 +3,15 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, LogIn, MapPin, Mail, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { contato, logoImage } from '@/data/site-content';
-
-const navLinks = [
-  { label: 'Início', href: '/#inicio' },
-  { label: 'Serviços', href: '/#servicos' },
-  { label: 'Imóveis', href: '/#imoveis' },
-  { label: 'Cursos', href: '/#cursos' },
-  { label: 'Marketplace', href: '/#marketplace' },
-  { label: 'Você sabia?', href: '/#voce-sabia' },
-  { label: 'Sobre', href: '/#sobre' },
-  { label: 'Contato', href: '/#contato' },
-  { label: 'Blog', href: '/blog' },
-];
+import { navItemsFrom, useSiteConfig } from '@/hooks/use-site-config';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const { config } = useSiteConfig();
+  const navLinks = navItemsFrom(config).filter((l) => l.id !== 'links');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
