@@ -2,12 +2,16 @@ import { trackEvent } from '@/lib/site-analytics';
 import { useState } from 'react';
 import { X, Send, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const WHATSAPP_URL = 'https://wa.me/5554999787256';
+import { useSiteConfig, waHref } from '@/hooks/use-site-config';
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
+  const { config } = useSiteConfig();
+  const chat = config.chat;
+  const WHATSAPP_URL = waHref(config.contact);
+
+  if (!chat.enabled) return null;
 
   const handleSend = () => {
     const text = message.trim() || 'Olá, gostaria de mais informações!';
@@ -26,7 +30,7 @@ export default function ChatWidget() {
             exit={{ opacity: 0, x: 20 }}
             className="bg-foreground text-background rounded-full px-4 py-2 text-sm font-medium shadow-lg flex items-center gap-2"
           >
-            👋 Como posso ajudar você hoje?
+            {chat.bubble}
           </motion.div>
         )}
       </AnimatePresence>
@@ -45,8 +49,8 @@ export default function ChatWidget() {
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-emerald-700 flex items-center justify-center font-heading text-lg text-foreground">E</div>
                 <div>
-                  <p className="font-semibold text-sm text-foreground">Engenheiro Edgar</p>
-                  <p className="text-xs text-emerald-200">Online agora</p>
+                  <p className="font-semibold text-sm text-foreground">{chat.name}</p>
+                  <p className="text-xs text-emerald-200">{chat.status}</p>
                 </div>
               </div>
               <button onClick={() => setOpen(false)} className="text-foreground/80 hover:text-foreground">
@@ -57,7 +61,7 @@ export default function ChatWidget() {
             {/* Message */}
             <div className="p-4">
               <div className="bg-muted rounded-lg p-3 text-sm text-foreground leading-relaxed">
-                Olá! 👋 Sou o Edgar, Engenheiro Civil. Como posso te ajudar hoje? Fique à vontade para perguntar sobre nossos serviços, projetos ou tirar qualquer dúvida!
+                {chat.greeting}
               </div>
             </div>
 
@@ -86,7 +90,7 @@ export default function ChatWidget() {
                 rel="noopener noreferrer"
                 className="block w-full bg-emerald-500 hover:bg-emerald-600 text-foreground text-center py-2.5 rounded-lg text-sm font-semibold transition-colors"
               >
-                💬 Falar no WhatsApp
+                {chat.buttonLabel}
               </a>
             </div>
           </motion.div>
