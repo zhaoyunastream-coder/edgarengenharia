@@ -1,19 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, MessageCircle, Mail, MapPin } from 'lucide-react';
 import { contato, logoImage } from '@/data/site-content';
-
-const pageLinks = [
-  { label: 'Início', href: '/#inicio' },
-  { label: 'Serviços', href: '/#servicos' },
-  { label: 'Imóveis', href: '/#imoveis' },
-  { label: 'Cursos', href: '/#cursos' },
-  { label: 'Marketplace', href: '/#marketplace' },
-  { label: 'Você sabia ???', href: '/#voce-sabia' },
-  { label: 'Sobre', href: '/#sobre' },
-  { label: 'Contato', href: '/#contato' },
-  { label: 'Links Úteis', href: '/#links-uteis' },
-  { label: 'Blog', href: '/blog' },
-];
+import { navItemsFrom, useSiteConfig } from '@/hooks/use-site-config';
 
 const socials = [
   { icon: Facebook, href: 'https://www.facebook.com/edgarkmiecik1', label: 'Facebook' },
@@ -23,6 +11,8 @@ const socials = [
 ];
 
 export default function Footer() {
+  const { config } = useSiteConfig();
+  const pageLinks = navItemsFrom(config);
   return (
     <footer className="bg-foreground text-background/80 py-14">
       <div className="container mx-auto px-4">
@@ -30,7 +20,7 @@ export default function Footer() {
           <div>
             <img src={logoImage} alt="Engenheiro Edgar" width={180} height={60} loading="lazy" className="h-12 w-auto mb-4 brightness-0 invert" />
             <p className="text-sm leading-relaxed">
-              Engenharia Civil, corretagem de imóveis e cursos em Carazinho/RS e região.
+              Engenharia Civil e corretagem de imóveis em Carazinho/RS e região.
             </p>
             <p className="text-sm mt-3">{contato.crea} &nbsp;|&nbsp; {contato.creci}</p>
           </div>
