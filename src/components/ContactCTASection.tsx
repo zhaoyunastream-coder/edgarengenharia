@@ -31,7 +31,6 @@ const services = [
   'Acessibilidade',
   'Perícias e Laudos',
   'Imóveis',
-  'Cursos',
   'Marketplace',
   'Outro',
 ];
