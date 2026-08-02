@@ -123,11 +123,16 @@ export default function SiteAppearanceEditor() {
   useEffect(() => {
     const el = previewBoxRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(([entry]) => setBoxWidth(entry.contentRect.width));
+    const update = () => setBoxWidth(el.clientWidth);
+    const ro = new ResizeObserver(update);
     ro.observe(el);
-    setBoxWidth(el.clientWidth);
-    return () => ro.disconnect();
-  }, [draft]);
+    update();
+    window.addEventListener('resize', update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', update);
+    };
+  }, [draft, device]);
 
   const { data, isLoading } = useQuery({ queryKey: ['site-config'], queryFn: fetchSiteConfig });
 
@@ -502,33 +507,37 @@ export default function SiteAppearanceEditor() {
             </button>
           </div>
         </div>
-        {(() => {
-          const frameWidth = device === 'mobile' ? 390 : DESKTOP_PREVIEW_WIDTH;
-          const scale = boxWidth ? Math.min(1, boxWidth / frameWidth) : 1;
-          const frameHeight = Math.max(600, Math.round((typeof window !== 'undefined' ? window.innerHeight : 900) - 240) / scale);
-          return (
-            <div
-              ref={previewBoxRef}
-              className="bg-muted rounded-lg overflow-hidden flex justify-center"
-              style={{ height: frameHeight * scale }}
-            >
-              <iframe
-                ref={iframeRef}
-                title="Pré-visualização do site"
-                src="/"
-                onLoad={() => setReady(true)}
-                className="bg-background border-0"
+        <div ref={previewBoxRef} className="w-full">
+          {(() => {
+            const frameWidth = device === 'mobile' ? 390 : DESKTOP_PREVIEW_WIDTH;
+            const frameHeight = device === 'mobile' ? 844 : 900;
+            const scale = boxWidth > 0 ? Math.min(1, boxWidth / frameWidth) : 0;
+            if (!scale) return <div className="bg-muted rounded-lg h-[520px]" />;
+            return (
+              <div
+                className="bg-muted rounded-lg overflow-hidden mx-auto"
                 style={{
-                  width: frameWidth,
-                  height: frameHeight,
-                  transform: `scale(${scale})`,
-                  transformOrigin: 'top center',
-                  flex: '0 0 auto',
+                  width: frameWidth * scale,
+                  height: frameHeight * scale,
                 }}
-              />
-            </div>
-          );
-        })()}
+              >
+                <iframe
+                  ref={iframeRef}
+                  title="Pré-visualização do site"
+                  src="/"
+                  onLoad={() => setReady(true)}
+                  className="bg-background border-0 block"
+                  style={{
+                    width: frameWidth,
+                    height: frameHeight,
+                    transform: `scale(${scale})`,
+                    transformOrigin: 'top left',
+                  }}
+                />
+              </div>
+            );
+          })()}
+        </div>
         <p className="text-xs text-muted-foreground mt-3">
           Dica: no modo computador o menu aparece escrito no topo; no celular ele vira o botão de três
           risquinhos. Role a pré-visualização para ver o site inteiro.
