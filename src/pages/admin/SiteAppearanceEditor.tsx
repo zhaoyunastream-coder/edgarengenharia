@@ -270,6 +270,18 @@ export default function SiteAppearanceEditor() {
       return { ...c, layout };
     });
 
+  const scrollPreviewTo = (id: SectionId) => {
+    const anchor = SECTION_PREVIEW_ANCHOR[id];
+    const doc = iframeRef.current?.contentDocument;
+    const el = anchor ? doc?.getElementById(anchor) : null;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const openSection = (id: SectionId) => {
+    setEditingSection((cur) => (cur === id ? null : id));
+    setTimeout(() => scrollPreviewTo(id), 50);
+  };
+
   const dirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(data), [draft, data]);
 
   if (isLoading || !draft) {
