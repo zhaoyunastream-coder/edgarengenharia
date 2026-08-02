@@ -10,6 +10,7 @@ import {
   MessageSquare,
   Monitor,
   Palette,
+  Pencil,
   Phone,
   Plus,
   RotateCcw,
