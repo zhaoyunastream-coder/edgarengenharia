@@ -39,6 +39,19 @@ import {
 
 const labelOf = (id: SectionId) => SECTION_DEFS.find((s) => s.id === id)?.label ?? id;
 
+const SECTION_PREVIEW_ANCHOR: Record<string, string> = {
+  hero: 'inicio',
+  servicos: 'servicos',
+  imoveis: 'imoveis',
+  cursos: 'cursos',
+  marketplace: 'marketplace',
+  vocesabia: 'voce-sabia',
+  sobre: 'sobre',
+  blog: 'blog',
+  contato: 'contato',
+  links: 'links-uteis',
+};
+
 const COLOR_FIELDS: { key: 'primary' | 'background' | 'foreground' | 'muted'; label: string }[] = [
   { key: 'primary', label: 'Cor principal (destaque)' },
   { key: 'background', label: 'Fundo do site' },
