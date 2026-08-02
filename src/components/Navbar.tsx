@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, LogIn, MapPin, Mail, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { contato, logoImage } from '@/data/site-content';
-import { navItemsFrom, useSiteConfig } from '@/hooks/use-site-config';
+import { mapHref, navItemsFrom, telHref, useSiteConfig, waHref } from '@/hooks/use-site-config';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -12,6 +11,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const { config } = useSiteConfig();
   const navLinks = navItemsFrom(config).filter((l) => l.id !== 'links');
+  const contato = config.contact;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -36,13 +36,13 @@ export default function Navbar() {
 
   const quickIcons = (
     <>
-      <a href={contato.mapa} target="_blank" rel="noopener noreferrer" aria-label="Ver endereço no mapa" className="text-muted-foreground hover:text-primary transition-colors">
+      <a href={mapHref(contato)} target="_blank" rel="noopener noreferrer" aria-label="Ver endereço no mapa" className="text-muted-foreground hover:text-primary transition-colors">
         <MapPin className="w-[18px] h-[18px]" />
       </a>
       <a href={`mailto:${contato.email}`} aria-label="Enviar e-mail" className="text-muted-foreground hover:text-primary transition-colors">
         <Mail className="w-[18px] h-[18px]" />
       </a>
-      <a href={contato.telefoneHref} aria-label="Ligar" className="text-muted-foreground hover:text-primary transition-colors">
+      <a href={telHref(contato)} aria-label="Ligar" className="text-muted-foreground hover:text-primary transition-colors">
         <Phone className="w-[18px] h-[18px]" />
       </a>
     </>
@@ -58,7 +58,7 @@ export default function Navbar() {
         <div className="container mx-auto px-4 h-[70px] flex items-center justify-between gap-4">
           <Link to="/" className="flex items-center shrink-0" aria-label="Página inicial">
             <img
-              src={logoImage}
+              src={config.brand.logo}
               alt="Edgar Alexandre Kmiecik — Engenheiro Civil"
               width={116}
               height={58}
@@ -143,7 +143,7 @@ export default function Navbar() {
                 )}
               </div>
               <a
-                href={contato.whatsappHref}
+                href={waHref(contato)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-primary text-primary-foreground px-5 py-3 rounded-[3px] text-center font-semibold mt-6"
