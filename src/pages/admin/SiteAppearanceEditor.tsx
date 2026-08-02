@@ -479,36 +479,60 @@ export default function SiteAppearanceEditor() {
       {/* Preview */}
       <div className="bg-card border border-border rounded-xl p-4 xl:sticky xl:top-4 h-fit">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-sm text-muted-foreground">Pré-visualização ao vivo</p>
+          <div>
+            <p className="text-sm font-medium">Pré-visualização ao vivo</p>
+            <p className="text-xs text-muted-foreground">
+              É assim que o visitante vê. Publique para valer nas mudanças.
+            </p>
+          </div>
           <div className="flex items-center gap-1">
             <button
               onClick={() => setDevice('desktop')}
+              title="Ver como fica no computador"
               className={`p-2 rounded-lg border ${device === 'desktop' ? 'border-primary text-primary' : 'border-border text-muted-foreground'}`}
             >
               <Monitor className="w-4 h-4" />
             </button>
             <button
               onClick={() => setDevice('mobile')}
+              title="Ver como fica no celular"
               className={`p-2 rounded-lg border ${device === 'mobile' ? 'border-primary text-primary' : 'border-border text-muted-foreground'}`}
             >
               <Smartphone className="w-4 h-4" />
             </button>
           </div>
         </div>
-        <div className="bg-muted rounded-lg overflow-hidden flex justify-center">
-          <iframe
-            ref={iframeRef}
-            title="Pré-visualização do site"
-            src="/"
-            onLoad={() => setReady(true)}
-            className="bg-background border-0"
-            style={{
-              width: device === 'mobile' ? 390 : '100%',
-              height: 'calc(100vh - 200px)',
-              minHeight: 600,
-            }}
-          />
-        </div>
+        {(() => {
+          const frameWidth = device === 'mobile' ? 390 : DESKTOP_PREVIEW_WIDTH;
+          const scale = boxWidth ? Math.min(1, boxWidth / frameWidth) : 1;
+          const frameHeight = Math.max(600, Math.round((typeof window !== 'undefined' ? window.innerHeight : 900) - 240) / scale);
+          return (
+            <div
+              ref={previewBoxRef}
+              className="bg-muted rounded-lg overflow-hidden flex justify-center"
+              style={{ height: frameHeight * scale }}
+            >
+              <iframe
+                ref={iframeRef}
+                title="Pré-visualização do site"
+                src="/"
+                onLoad={() => setReady(true)}
+                className="bg-background border-0"
+                style={{
+                  width: frameWidth,
+                  height: frameHeight,
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'top center',
+                  flex: '0 0 auto',
+                }}
+              />
+            </div>
+          );
+        })()}
+        <p className="text-xs text-muted-foreground mt-3">
+          Dica: no modo computador o menu aparece escrito no topo; no celular ele vira o botão de três
+          risquinhos. Role a pré-visualização para ver o site inteiro.
+        </p>
       </div>
 
       {cropFile && (
