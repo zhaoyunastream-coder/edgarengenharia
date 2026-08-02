@@ -154,6 +154,7 @@ export default function SiteAppearanceEditor() {
   const [draft, setDraft] = useState<SiteConfig | null>(null);
   const [ready, setReady] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [editingSection, setEditingSection] = useState<SectionId | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
   const [cropTarget, setCropTarget] = useState<'hero' | 'about'>('hero');
   const [uploading, setUploading] = useState(false);
