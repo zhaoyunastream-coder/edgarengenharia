@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import {
+  contato as CONTATO_PADRAO,
+  logoImage as LOGO_PADRAO,
+  sobreImage as SOBRE_IMG_PADRAO,
+  sobreTexto as SOBRE_TEXTO_PADRAO,
+} from '@/data/site-content';
 
 export type SectionId =
   | 'hero'
@@ -59,7 +65,144 @@ export interface SiteConfig {
   layout: LayoutSection[];
   theme: SiteTheme;
   texts: Record<string, SectionText>;
+  brand: SiteBrand;
+  contact: SiteContact;
+  socials: SiteSocial[];
+  about: SiteAbout;
+  chat: SiteChat;
+  form: SiteForm;
 }
+
+/* ---------- conteúdo editável ---------- */
+
+export interface SiteBrand {
+  logo: string;
+  tagline: string;
+  copyright: string;
+  credit: string;
+  creditUrl: string;
+}
+
+export interface SiteContact {
+  endereco: string;
+  mapa: string;
+  whatsapp: string;
+  telefone: string;
+  email: string;
+  horario: string;
+  crea: string;
+  creci: string;
+}
+
+export type SocialIcon = 'facebook' | 'instagram' | 'whatsapp' | 'email' | 'linkedin' | 'youtube' | 'site';
+
+export interface SiteSocial {
+  label: string;
+  url: string;
+  icon: SocialIcon;
+}
+
+export interface SiteAbout {
+  image: string;
+  text: string;
+  closing: string;
+}
+
+export interface SiteChat {
+  enabled: boolean;
+  bubble: string;
+  name: string;
+  status: string;
+  greeting: string;
+  buttonLabel: string;
+}
+
+export interface SiteForm {
+  services: string[];
+  buttonLabel: string;
+}
+
+export const DEFAULT_BRAND: SiteBrand = {
+  logo: LOGO_PADRAO,
+  tagline: 'Engenharia Civil e corretagem de imóveis em Carazinho/RS e região.',
+  copyright: 'Engenheiro Edgar. Todos os direitos reservados.',
+  credit: 'agenciafw.com.br',
+  creditUrl: 'https://agenciafw.com.br/',
+};
+
+export const DEFAULT_CONTACT: SiteContact = {
+  endereco: CONTATO_PADRAO.endereco,
+  mapa: CONTATO_PADRAO.mapa,
+  whatsapp: CONTATO_PADRAO.whatsapp,
+  telefone: CONTATO_PADRAO.telefone,
+  email: CONTATO_PADRAO.email,
+  horario: CONTATO_PADRAO.horario,
+  crea: CONTATO_PADRAO.crea,
+  creci: CONTATO_PADRAO.creci,
+};
+
+export const DEFAULT_SOCIALS: SiteSocial[] = [
+  { label: 'Facebook', url: 'https://www.facebook.com/edgarkmiecik1', icon: 'facebook' },
+  { label: 'Instagram', url: 'https://www.instagram.com/engenheiroedgar/', icon: 'instagram' },
+  { label: 'WhatsApp', url: '', icon: 'whatsapp' },
+  { label: 'E-mail', url: '', icon: 'email' },
+];
+
+export const DEFAULT_ABOUT: SiteAbout = {
+  image: SOBRE_IMG_PADRAO,
+  text: SOBRE_TEXTO_PADRAO,
+  closing: 'Entre em contato, que terei o maior prazer em lhe atender.',
+};
+
+export const DEFAULT_CHAT: SiteChat = {
+  enabled: true,
+  bubble: '👋 Como posso ajudar você hoje?',
+  name: 'Engenheiro Edgar',
+  status: 'Online agora',
+  greeting:
+    'Olá! 👋 Sou o Edgar, Engenheiro Civil. Como posso te ajudar hoje? Fique à vontade para perguntar sobre nossos serviços, projetos ou tirar qualquer dúvida!',
+  buttonLabel: '💬 Falar no WhatsApp',
+};
+
+export const DEFAULT_FORM: SiteForm = {
+  services: [
+    'Projetos e Execução de Obras',
+    'Compatibilização BIM',
+    'Regularização de Imóveis',
+    'INSS de Obras',
+    'Desmembramento e Unificação',
+    'Cálculos Estruturais',
+    'Incorporação de Imóveis',
+    'PPCI',
+    'Acessibilidade',
+    'Perícias e Laudos',
+    'Imóveis',
+    'Marketplace',
+    'Outro',
+  ],
+  buttonLabel: 'Enviar',
+};
+
+/** Links derivados dos dados de contato. */
+const onlyDigits = (v: string) => (v || '').replace(/\D/g, '');
+
+export const waHref = (c: SiteContact, text?: string) => {
+  const n = onlyDigits(c.whatsapp);
+  const base = `https://wa.me/${n.length > 11 ? n : `55${n}`}`;
+  return text ? `${base}?text=${encodeURIComponent(text)}` : base;
+};
+
+export const telHref = (c: SiteContact) => `tel:+${onlyDigits(c.telefone)}`;
+
+export const mapHref = (c: SiteContact) =>
+  c.mapa?.trim() ? c.mapa : `https://maps.google.com/?q=${encodeURIComponent(c.endereco || '')}`;
+
+export const socialHref = (s: SiteSocial, c: SiteContact) => {
+  if (s.url?.trim()) return s.url;
+  if (s.icon === 'whatsapp') return waHref(c);
+  if (s.icon === 'email') return `mailto:${c.email}`;
+  return '#';
+};
 
 export const DEFAULT_THEME: SiteTheme = {
   primary: '#2CCFD8',
@@ -85,6 +228,12 @@ export const DEFAULT_CONFIG: SiteConfig = {
   layout: DEFAULT_LAYOUT,
   theme: DEFAULT_THEME,
   texts: DEFAULT_TEXTS,
+  brand: DEFAULT_BRAND,
+  contact: DEFAULT_CONTACT,
+  socials: DEFAULT_SOCIALS,
+  about: DEFAULT_ABOUT,
+  chat: DEFAULT_CHAT,
+  form: DEFAULT_FORM,
 };
 
 /* ---------- cores ---------- */
@@ -166,6 +315,18 @@ function merge(raw: Partial<SiteConfig> | null | undefined): SiteConfig {
     layout,
     theme: { ...DEFAULT_THEME, ...(raw?.theme ?? {}) },
     texts: { ...DEFAULT_TEXTS, ...(raw?.texts ?? {}) },
+    brand: { ...DEFAULT_BRAND, ...(raw?.brand ?? {}) },
+    contact: { ...DEFAULT_CONTACT, ...(raw?.contact ?? {}) },
+    socials: Array.isArray(raw?.socials) ? raw!.socials : DEFAULT_SOCIALS,
+    about: { ...DEFAULT_ABOUT, ...(raw?.about ?? {}) },
+    chat: { ...DEFAULT_CHAT, ...(raw?.chat ?? {}) },
+    form: {
+      ...DEFAULT_FORM,
+      ...(raw?.form ?? {}),
+      services: Array.isArray(raw?.form?.services) && raw!.form!.services.length
+        ? raw!.form!.services
+        : DEFAULT_FORM.services,
+    },
   };
 }
 
