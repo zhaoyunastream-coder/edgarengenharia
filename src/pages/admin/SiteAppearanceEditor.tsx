@@ -127,7 +127,7 @@ export default function SiteAppearanceEditor() {
     ro.observe(el);
     setBoxWidth(el.clientWidth);
     return () => ro.disconnect();
-  }, []);
+  }, [draft]);
 
   const { data, isLoading } = useQuery({ queryKey: ['site-config'], queryFn: fetchSiteConfig });
 
