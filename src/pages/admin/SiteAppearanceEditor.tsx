@@ -216,6 +216,28 @@ export default function SiteAppearanceEditor() {
     <div className="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-6">
       {/* Painel de edição */}
       <div className="space-y-6">
+        {/* Tutorial */}
+        <div className="bg-primary/5 border border-primary/30 rounded-xl overflow-hidden">
+          <button
+            onClick={() => setShowTutorial((v) => !v)}
+            className="w-full flex items-center gap-2 px-4 py-3 text-left"
+          >
+            <HelpCircle className="w-4 h-4 text-primary shrink-0" />
+            <span className="text-sm font-medium flex-1">Como usar o editor (passo a passo)</span>
+            <span className="text-xs text-muted-foreground">{showTutorial ? 'fechar' : 'abrir'}</span>
+          </button>
+          {showTutorial && (
+            <ol className="px-4 pb-4 space-y-3">
+              {TUTORIAL_STEPS.map((s) => (
+                <li key={s.title} className="bg-background border border-border rounded-lg p-3">
+                  <p className="text-sm font-medium mb-1">{s.title}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{s.body}</p>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+
         <div className="bg-card border border-border rounded-xl p-4 flex items-center gap-2">
           <button
             onClick={() => save.mutate()}
