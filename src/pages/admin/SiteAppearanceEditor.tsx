@@ -10,6 +10,7 @@ import {
   MessageSquare,
   Monitor,
   Palette,
+  Pencil,
   Phone,
   Plus,
   RotateCcw,
@@ -38,6 +39,19 @@ import {
 } from '@/hooks/use-site-config';
 
 const labelOf = (id: SectionId) => SECTION_DEFS.find((s) => s.id === id)?.label ?? id;
+
+const SECTION_PREVIEW_ANCHOR: Record<string, string> = {
+  hero: 'inicio',
+  servicos: 'servicos',
+  imoveis: 'imoveis',
+  cursos: 'cursos',
+  marketplace: 'marketplace',
+  vocesabia: 'voce-sabia',
+  sobre: 'sobre',
+  blog: 'blog',
+  contato: 'contato',
+  links: 'links-uteis',
+};
 
 const COLOR_FIELDS: { key: 'primary' | 'background' | 'foreground' | 'muted'; label: string }[] = [
   { key: 'primary', label: 'Cor principal (destaque)' },
@@ -141,6 +155,7 @@ export default function SiteAppearanceEditor() {
   const [draft, setDraft] = useState<SiteConfig | null>(null);
   const [ready, setReady] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [editingSection, setEditingSection] = useState<SectionId | null>(null);
   const [cropFile, setCropFile] = useState<File | null>(null);
   const [cropTarget, setCropTarget] = useState<'hero' | 'about'>('hero');
   const [uploading, setUploading] = useState(false);
@@ -256,6 +271,18 @@ export default function SiteAppearanceEditor() {
       return { ...c, layout };
     });
 
+  const scrollPreviewTo = (id: SectionId) => {
+    const anchor = SECTION_PREVIEW_ANCHOR[id];
+    const doc = iframeRef.current?.contentDocument;
+    const el = anchor ? doc?.getElementById(anchor) : null;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const openSection = (id: SectionId) => {
+    setEditingSection((cur) => (cur === id ? null : id));
+    setTimeout(() => scrollPreviewTo(id), 50);
+  };
+
   const dirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(data), [draft, data]);
 
   if (isLoading || !draft) {
@@ -314,12 +341,13 @@ export default function SiteAppearanceEditor() {
         <div className="bg-card border border-border rounded-xl p-5">
           <h2 className="font-heading text-lg mb-1">Seções da página</h2>
           <p className="text-xs text-muted-foreground mb-4">
-            Arraste para reordenar e use o olho para mostrar ou esconder.
+            Clique no nome da seção para editar aqui mesmo. Arraste (⠿) para reordenar e use o olho para mostrar ou
+            esconder.
           </p>
           <div className="space-y-2">
             {draft.layout.map((s, i) => (
+              <div key={s.id} className="space-y-2">
               <div
-                key={s.id}
                 draggable
                 onDragStart={() => setDragIndex(i)}
                 onDragOver={(e) => {
@@ -330,13 +358,26 @@ export default function SiteAppearanceEditor() {
                   }
                 }}
                 onDragEnd={() => setDragIndex(null)}
-                className={`flex items-center gap-2 rounded-lg border px-3 py-2 bg-background cursor-grab active:cursor-grabbing ${
-                  dragIndex === i ? 'border-primary' : 'border-border'
+                className={`flex items-center gap-2 rounded-lg border px-3 py-2 bg-background ${
+                  dragIndex === i || editingSection === s.id ? 'border-primary' : 'border-border'
                 } ${s.visible ? '' : 'opacity-50'}`}
               >
-                <GripVertical className="w-4 h-4 text-muted-foreground shrink-0" />
-                <span className="text-sm flex-1 truncate">{labelOf(s.id)}</span>
+                <GripVertical className="w-4 h-4 text-muted-foreground shrink-0 cursor-grab active:cursor-grabbing" />
+                <button
+                  onClick={() => openSection(s.id)}
+                  className="text-sm flex-1 truncate text-left hover:text-primary"
+                  title="Clique para editar esta seção"
+                >
+                  {labelOf(s.id)}
+                </button>
                 <span className="text-[11px] text-muted-foreground">{i + 1}</span>
+                <button
+                  onClick={() => openSection(s.id)}
+                  className="p-1.5 rounded hover:bg-muted"
+                  title="Editar seção"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
                 <button
                   onClick={() =>
                     patch((c) => ({
@@ -349,6 +390,88 @@ export default function SiteAppearanceEditor() {
                 >
                   {s.visible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                 </button>
+              </div>
+
+              {editingSection === s.id && (
+                <div className="rounded-lg border border-primary/40 bg-primary/5 p-3 space-y-3">
+                  <div>
+                    <label className="text-xs text-muted-foreground">Título que aparece no site e no menu</label>
+                    <input
+                      value={draft.texts[s.id]?.title ?? ''}
+                      onChange={(e) =>
+                        patch((c) => ({
+                          ...c,
+                          texts: { ...c.texts, [s.id]: { ...c.texts[s.id], title: e.target.value } },
+                        }))
+                      }
+                      className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm"
+                    />
+                  </div>
+
+                  {s.id === 'hero' && (
+                    <>
+                      <div>
+                        <label className="text-xs text-muted-foreground">Subtítulo da capa</label>
+                        <input
+                          value={draft.texts.hero?.subtitle ?? ''}
+                          onChange={(e) =>
+                            patch((c) => ({
+                              ...c,
+                              texts: { ...c.texts, hero: { ...c.texts.hero, subtitle: e.target.value } },
+                            }))
+                          }
+                          className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm"
+                        />
+                      </div>
+                      <button
+                        onClick={() => fileRef.current?.click()}
+                        disabled={uploading}
+                        className="inline-flex items-center gap-2 text-xs font-medium bg-primary text-primary-foreground px-3 py-2 rounded-lg"
+                      >
+                        <Upload className="w-3.5 h-3.5" /> Trocar foto da capa
+                      </button>
+                    </>
+                  )}
+
+                  {s.id === 'sobre' && (
+                    <div>
+                      <label className="text-xs text-muted-foreground">Texto do "Sobre"</label>
+                      <textarea
+                        rows={5}
+                        value={draft.about.text}
+                        onChange={(e) => patch((c) => ({ ...c, about: { ...c.about, text: e.target.value } }))}
+                        className="w-full mt-1 bg-background border border-border rounded-lg px-3 py-2 text-sm"
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      onClick={() =>
+                        patch((c) => ({
+                          ...c,
+                          layout: c.layout.map((x) => (x.id === s.id ? { ...x, visible: !x.visible } : x)),
+                        }))
+                      }
+                      className="text-xs px-3 py-1.5 rounded-lg border border-border bg-background hover:bg-muted"
+                    >
+                      {s.visible ? 'Ocultar seção' : 'Mostrar seção'}
+                    </button>
+                    <button
+                      onClick={() => scrollPreviewTo(s.id)}
+                      className="text-xs px-3 py-1.5 rounded-lg border border-border bg-background hover:bg-muted"
+                    >
+                      Ver na pré-visualização
+                    </button>
+                    <button
+                      onClick={() => setEditingSection(null)}
+                      className="text-xs px-3 py-1.5 rounded-lg text-muted-foreground hover:text-foreground ml-auto"
+                    >
+                      Fechar
+                    </button>
+                  </div>
+                </div>
+              )}
               </div>
             ))}
           </div>
