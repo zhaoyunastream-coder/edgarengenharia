@@ -27,10 +27,10 @@ export default function ImoveisSection({ title = "Imóveis" }: { title?: string 
                 <img
                   src={item.image}
                   alt={item.title}
-                  width={200}
-                  height={200}
+                  width={400}
+                  height={400}
                   loading="lazy"
-                  className="w-[100px] h-[100px] rounded-full object-cover border-4 border-background shadow-md mb-5"
+                  className="w-[180px] h-[180px] md:w-[200px] md:h-[200px] rounded-full object-cover border-4 border-background shadow-md mb-5"
                 />
               )}
               <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
